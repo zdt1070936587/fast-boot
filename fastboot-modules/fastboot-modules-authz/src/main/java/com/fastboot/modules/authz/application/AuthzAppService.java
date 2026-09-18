@@ -9,11 +9,20 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * RBAC 授权关系与数据范围应用服务
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Service
 public class AuthzAppService {
 
+  /** 用户-角色-权限关联映射器 */
   private final AuthzRelationMapper relationMapper;
+  /** 权限查询与缓存服务 */
   private final PermissionQueryService permissionQueryService;
+  /** 领域事件发布器 */
   private final ApplicationEventPublisher events;
 
   public AuthzAppService(
@@ -54,7 +63,7 @@ public class AuthzAppService {
   }
 
   /**
-   * Empty list means ALL (no row-level restriction). Non-empty means visible org ids only.
+   * 空列表表示全部组织可见（无行级限制）；非空表示仅可见列出的组织 ID。
    */
   public List<Long> visibleOrgIds(Long userId, Long selfOrgId) {
     List<String> types = relationMapper.listScopeTypes(userId);

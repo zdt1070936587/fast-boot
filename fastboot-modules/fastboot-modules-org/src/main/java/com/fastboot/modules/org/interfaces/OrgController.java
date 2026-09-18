@@ -18,11 +18,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 组织树管理 REST 接口
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @RestController
 @RequestMapping("/api/v1/org")
 @Tag(name = "org")
 public class OrgController {
 
+  /** 组织树应用服务 */
   private final OrgAppService orgAppService;
 
   public OrgController(OrgAppService orgAppService) {

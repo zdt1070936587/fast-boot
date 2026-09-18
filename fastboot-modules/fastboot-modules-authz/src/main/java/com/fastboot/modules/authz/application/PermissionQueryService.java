@@ -10,13 +10,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * 用户权限与角色查询服务（含 Redis 缓存）
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Service
 public class PermissionQueryService implements PermissionQueryPort {
 
+  /** 日志记录器 */
   private static final Logger log = LoggerFactory.getLogger(PermissionQueryService.class);
+  /** 缓存过期时间 */
   private static final Duration TTL = Duration.ofMinutes(10);
 
+  /** RBAC 关联关系映射器 */
   private final AuthzRelationMapper relationMapper;
+  /** Redisson 客户端 */
   private final RedissonClient redissonClient;
 
   public PermissionQueryService(AuthzRelationMapper relationMapper, RedissonClient redissonClient) {

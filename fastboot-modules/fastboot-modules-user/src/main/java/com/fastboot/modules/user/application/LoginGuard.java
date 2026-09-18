@@ -10,9 +10,16 @@ import org.redisson.api.RateType;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
+/**
+ * 登录防护：按 IP 限流与按用户名累计失败锁定。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Component
 public class LoginGuard {
 
+  /** Redisson 客户端，用于分布式限流与计数 */
   private final RedissonClient redissonClient;
 
   public LoginGuard(RedissonClient redissonClient) {

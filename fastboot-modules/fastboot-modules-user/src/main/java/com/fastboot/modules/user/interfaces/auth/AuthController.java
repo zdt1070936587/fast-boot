@@ -14,11 +14,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 认证相关 HTTP 接口（登录、登出、当前用户信息）。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @RestController
 @RequestMapping("/api/v1/auth")
 @Tag(name = "auth")
 public class AuthController {
 
+  /** 认证应用服务 */
   private final AuthAppService authAppService;
 
   public AuthController(AuthAppService authAppService) {

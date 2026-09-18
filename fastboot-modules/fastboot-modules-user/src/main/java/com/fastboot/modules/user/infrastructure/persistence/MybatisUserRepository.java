@@ -8,9 +8,16 @@ import com.fastboot.modules.user.infrastructure.persistence.entity.SysUserEntity
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 基于 MyBatis-Plus 的 {@link UserRepository} 实现。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Repository
 public class MybatisUserRepository implements UserRepository {
 
+  /** 系统用户 Mapper */
   private final SysUserMapper sysUserMapper;
 
   public MybatisUserRepository(SysUserMapper sysUserMapper) {

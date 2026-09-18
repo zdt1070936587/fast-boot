@@ -8,10 +8,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 内部服务用的用户权限快照接口
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @RestController
 @RequestMapping("/api/v1/internal/permissions")
 public class InternalPermissionController {
 
+  /** 权限查询端口 */
   private final PermissionQueryPort permissionQueryPort;
 
   public InternalPermissionController(PermissionQueryPort permissionQueryPort) {

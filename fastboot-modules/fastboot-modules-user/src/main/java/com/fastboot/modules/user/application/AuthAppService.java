@@ -14,13 +14,24 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 认证应用服务：登录、登出、当前用户与组织归属。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Service
 public class AuthAppService {
 
+  /** 用户仓储 */
   private final UserRepository userRepository;
+  /** 密码哈希器 */
   private final PasswordHasher passwordHasher;
+  /** 权限查询端口 */
   private final PermissionQueryPort permissionQueryPort;
+  /** 登录防护（限流与失败锁定） */
   private final LoginGuard loginGuard;
+  /** 领域事件发布器 */
   private final ApplicationEventPublisher events;
 
   public AuthAppService(

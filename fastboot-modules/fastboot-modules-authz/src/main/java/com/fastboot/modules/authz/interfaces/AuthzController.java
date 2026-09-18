@@ -23,12 +23,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * RBAC 授权管理 REST 接口
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @RestController
 @RequestMapping("/api/v1/authz")
 @Tag(name = "authz")
 public class AuthzController {
 
+  /** 角色/权限/菜单目录服务 */
   private final AuthzCatalogService catalogService;
+  /** 用户角色与授权关系应用服务 */
   private final AuthzAppService authzAppService;
 
   public AuthzController(AuthzCatalogService catalogService, AuthzAppService authzAppService) {

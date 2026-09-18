@@ -9,10 +9,17 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * OpenAPI 3 文档配置，启用 Bearer JWT 安全方案。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Configuration
 @ConditionalOnProperty(name = "fastboot.security.permit-docs", havingValue = "true")
 public class OpenApiConfig {
 
+  /** 构建带 Bearer 认证的 OpenAPI 元数据 */
   @Bean
   public OpenAPI fastbootOpenApi() {
     SecurityScheme bearer =

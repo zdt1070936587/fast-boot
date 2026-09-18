@@ -9,9 +9,16 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 组织单元 MyBatis 仓储实现
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Repository
 public class MybatisOrgUnitRepository implements OrgUnitRepository {
 
+  /** 组织单元表映射器 */
   private final SysOrgUnitMapper mapper;
 
   public MybatisOrgUnitRepository(SysOrgUnitMapper mapper) {

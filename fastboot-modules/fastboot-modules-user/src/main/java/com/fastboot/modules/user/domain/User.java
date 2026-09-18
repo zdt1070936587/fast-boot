@@ -4,11 +4,22 @@ import com.fastboot.common.error.BizException;
 import com.fastboot.common.error.ErrorCode;
 import com.fastboot.ddd.domain.model.AggregateRoot;
 
+/**
+ * 用户聚合根。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 public class User extends AggregateRoot<Long> {
+  /** 登录用户名 */
   private String username;
+  /** 显示名称 */
   private String displayName;
+  /** 密码哈希值 */
   private String passwordHash;
+  /** 是否启用 */
   private boolean enabled;
+  /** 所属组织单元 ID */
   private Long orgUnitId;
 
   public static User restore(

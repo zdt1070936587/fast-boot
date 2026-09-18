@@ -17,11 +17,20 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 角色、权限点与菜单目录维护服务
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Service
 public class AuthzCatalogService {
 
+  /** 角色表映射器 */
   private final SysRoleMapper roleMapper;
+  /** 权限点表映射器 */
   private final SysPermissionMapper permissionMapper;
+  /** 菜单表映射器 */
   private final SysMenuMapper menuMapper;
 
   public AuthzCatalogService(

@@ -11,16 +11,24 @@ import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
+/**
+ * {@link Idempotent} 注解切面，使用 Redis 桶实现短时幂等。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Aspect
 @Component
 public class IdempotentAspect {
 
+  /** Redisson 客户端 */
   private final RedissonClient redissonClient;
 
   public IdempotentAspect(RedissonClient redissonClient) {
     this.redissonClient = redissonClient;
   }
 
+  /** 首次请求写入幂等键并执行业务，重复请求抛出幂等冲突 */
   @Around("@annotation(idempotent)")
   public Object around(ProceedingJoinPoint pjp, Idempotent idempotent) throws Throwable {
     String key = "fb:idem:" + DistributedLockAspect.eval(pjp, idempotent.key());

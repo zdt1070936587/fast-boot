@@ -6,6 +6,12 @@ import com.fastboot.modules.user.infrastructure.persistence.entity.SysUserEntity
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * 系统用户表 MyBatis 映射接口。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUserEntity> {
 

@@ -8,10 +8,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 用户组织归属相关 HTTP 接口。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserOrgController {
 
+  /** 认证应用服务 */
   private final AuthAppService authAppService;
 
   public UserOrgController(AuthAppService authAppService) {

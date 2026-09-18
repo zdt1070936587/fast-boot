@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * 网关全局链路追踪过滤器，透传或生成 TraceId 并写入请求与响应头。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Component
 public class GatewayTraceFilter implements GlobalFilter, Ordered {
 

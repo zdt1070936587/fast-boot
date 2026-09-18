@@ -4,9 +4,18 @@ import com.fastboot.common.error.BizException;
 import com.fastboot.common.error.ErrorCode;
 import com.fastboot.ddd.domain.model.AggregateRoot;
 
+/**
+ * 组织树节点聚合根
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 public class OrgUnit extends AggregateRoot<Long> {
+  /** 上级组织 ID */
   private Long parentId;
+  /** 组织名称 */
   private String name;
+  /** 物化路径（用于子树查询与移动） */
   private String path;
 
   public static OrgUnit create(Long parentId, String name, String parentPath) {

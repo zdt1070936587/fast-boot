@@ -11,15 +11,25 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * 应用启动时为未设置密码的 admin 用户初始化密码（需显式开启配置）。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Component
 @Order(20)
 @ConditionalOnProperty(name = "fastboot.admin.bootstrap", havingValue = "true")
 public class AdminPasswordBootstrap implements ApplicationRunner {
 
+  /** 日志记录器 */
   private static final Logger log = LoggerFactory.getLogger(AdminPasswordBootstrap.class);
 
+  /** 用户仓储 */
   private final UserRepository userRepository;
+  /** 密码哈希器 */
   private final PasswordHasher passwordHasher;
+  /** 配置中的 admin 初始密码 */
   private final String adminPassword;
 
   public AdminPasswordBootstrap(

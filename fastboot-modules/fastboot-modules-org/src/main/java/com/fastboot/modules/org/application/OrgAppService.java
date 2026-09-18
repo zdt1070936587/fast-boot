@@ -11,10 +11,18 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 组织树应用服务
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Service
 public class OrgAppService {
 
+  /** 组织单元仓储 */
   private final OrgUnitRepository orgUnitRepository;
+  /** 授权服务（数据范围过滤） */
   private final AuthzAppService authzAppService;
 
   public OrgAppService(OrgUnitRepository orgUnitRepository, AuthzAppService authzAppService) {

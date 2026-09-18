@@ -1,6 +1,11 @@
 package com.fastboot.ddd.application;
 
-/** Marker for the application-layer kernel; application services live in business modules. */
+/**
+ * 应用层内核占位类；具体应用服务位于各业务模块。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 public final class ApplicationKernel {
   private ApplicationKernel() {}
 }

@@ -13,12 +13,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * 网关全局认证过滤器，校验登录 Token 并对受保护路径注入转发头。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Component
 public class GatewayAuthFilter implements GlobalFilter, Ordered {
 
+  /** 无需登录即可访问的路径前缀列表 */
   private static final List<String> PUBLIC_PREFIXES =
       List.of("/api/v1/auth/login", "/actuator", "/v3/api-docs", "/swagger-ui");
 
+  /** Redis 模板，用于校验 Token 是否在登录态缓存中存在 */
   private final StringRedisTemplate redisTemplate;
 
   public GatewayAuthFilter(StringRedisTemplate redisTemplate) {

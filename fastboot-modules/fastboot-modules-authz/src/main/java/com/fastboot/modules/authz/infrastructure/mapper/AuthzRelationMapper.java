@@ -7,6 +7,12 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+/**
+ * RBAC 关联关系与数据权限范围查询映射器
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Mapper
 public interface AuthzRelationMapper {
 

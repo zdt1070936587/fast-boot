@@ -14,16 +14,24 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
+/**
+ * {@link DistributedLock} 注解切面，基于 Redisson 实现方法级分布式锁。
+ *
+ * @author zhaodt
+ * @since 2026-09-19
+ */
 @Aspect
 @Component
 public class DistributedLockAspect {
 
+  /** Redisson 客户端 */
   private final RedissonClient redissonClient;
 
   public DistributedLockAspect(RedissonClient redissonClient) {
     this.redissonClient = redissonClient;
   }
 
+  /** 加锁执行目标方法，失败时抛出业务冲突异常 */
   @Around("@annotation(distributedLock)")
   public Object around(ProceedingJoinPoint pjp, DistributedLock distributedLock) throws Throwable {
     String key = "fb:lock:" + eval(pjp, distributedLock.key());
@@ -42,6 +50,13 @@ public class DistributedLockAspect {
     }
   }
 
+  /**
+   * 解析锁键：无 SpEL 时原样返回，否则按方法参数求值。
+   *
+   * @param pjp 连接点
+   * @param expression 键表达式
+   * @return 解析后的键字符串
+   */
   static String eval(ProceedingJoinPoint pjp, String expression) {
     if (!expression.contains("#")) {
       return expression;
