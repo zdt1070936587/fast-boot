@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.fastboot</groupId>
+    <artifactId>fast-boot</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>fastboot-boot-microservice</artifactId>
+  <packaging>pom</packaging>
+  <name>fastboot-boot-microservice</name>
+
+  <modules>
+    <module>fastboot-service-user</module>
+    <module>fastboot-service-authz</module>
+    <module>fastboot-service-org</module>
+    <module>fastboot-gateway</module>
+  </modules>
+</project>

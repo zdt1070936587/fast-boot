@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    username: ${POSTGRES_USER:fastboot}
+    password: ${POSTGRES_PASSWORD:fastboot}
+  data:
+    redis:
+      password: ${REDIS_PASSWORD:fastboot}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+fastboot:
+  security:
+    permit-docs: true
+  admin:
+    bootstrap: true
+    password: ${FASTBOOT_ADMIN_PASSWORD:admin}
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-}]"
