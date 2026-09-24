@@ -92,7 +92,7 @@ HTTP 示例见 `http/api.http`。
 | `fastboot-boot-monolith` | 默认启动器 |
 | `fastboot-boot-microservice/*` | 实验性拆分 |
 
-分层约定见 `docs/adr` 与 `docs/CONTRIBUTING.md`。新模块模板见 `docs/codegen.md`。
+分层约定见 `docs/architecture.md`、`docs/adr` 与 `docs/CONTRIBUTING.md`。新模块模板见 `docs/codegen.md`。
 
 ## 应用镜像
 
