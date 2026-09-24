@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @since 2026-09-19
  */
 @FeignClient(
-    name = "fastboot-authz-service",
-    url = "${fastboot.authz.base-url:http://127.0.0.1:18082}",
-    contextId = "authzPermissionClient")
+        name = "fastboot-authz-service",
+        url = "${fastboot.authz.base-url:http://127.0.0.1:18082}",
+        contextId = "authzPermissionClient")
 public interface AuthzPermissionClient {
 
-  @GetMapping("/api/v1/internal/permissions/{userId}")
-  R<PermissionSnapshot> get(@PathVariable("userId") Long userId);
+    @GetMapping("/api/v1/internal/permissions/{userId}")
+    R<PermissionSnapshot> get(@PathVariable("userId") Long userId);
 }

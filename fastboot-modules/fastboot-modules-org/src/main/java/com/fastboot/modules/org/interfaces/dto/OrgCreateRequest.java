@@ -9,4 +9,4 @@ import jakarta.validation.constraints.NotBlank;
  * @since 2026-09-19
  */
 public record OrgCreateRequest(
-    /** 上级组织 ID，根节点可为空 */ Long parentId, /** 组织名称 */ @NotBlank String name) {}
+        /** 上级组织 ID，根节点可为空 */ Long parentId, /** 组织名称 */ @NotBlank String name) {}

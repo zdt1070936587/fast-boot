@@ -22,51 +22,51 @@ import reactor.core.publisher.Mono;
 @Component
 public class GatewayAuthFilter implements GlobalFilter, Ordered {
 
-  /** 无需登录即可访问的路径前缀列表 */
-  private static final List<String> PUBLIC_PREFIXES =
-      List.of("/api/v1/auth/login", "/actuator", "/v3/api-docs", "/swagger-ui");
+    /** 无需登录即可访问的路径前缀列表 */
+    private static final List<String> PUBLIC_PREFIXES =
+            List.of("/api/v1/auth/login", "/actuator", "/v3/api-docs", "/swagger-ui");
 
-  /** Redis 模板，用于校验 Token 是否在登录态缓存中存在 */
-  private final StringRedisTemplate redisTemplate;
+    /** Redis 模板，用于校验 Token 是否在登录态缓存中存在 */
+    private final StringRedisTemplate redisTemplate;
 
-  public GatewayAuthFilter(StringRedisTemplate redisTemplate) {
-    this.redisTemplate = redisTemplate;
-  }
-
-  @Override
-  public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-    String path = exchange.getRequest().getURI().getPath();
-    if (isPublic(path)) {
-      return chain.filter(exchange);
+    public GatewayAuthFilter(StringRedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
-    String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-    String token = extract(header);
-    if (token == null || !Boolean.TRUE.equals(redisTemplate.hasKey("Authorization:login:token:" + token))) {
-      exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-      byte[] body = "{\"code\":401000,\"message\":\"未登录或登录已失效\"}".getBytes(StandardCharsets.UTF_8);
-      return exchange.getResponse().writeWith(Mono.just(exchange.getResponse().bufferFactory().wrap(body)));
-    }
-    ServerHttpRequest mutated =
-        exchange.getRequest().mutate().header("X-Forwarded-User-Token", token).build();
-    return chain.filter(exchange.mutate().request(mutated).build());
-  }
 
-  private boolean isPublic(String path) {
-    return PUBLIC_PREFIXES.stream().anyMatch(path::startsWith);
-  }
-
-  private String extract(String header) {
-    if (header == null || header.isBlank()) {
-      return null;
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        String path = exchange.getRequest().getURI().getPath();
+        if (isPublic(path)) {
+            return chain.filter(exchange);
+        }
+        String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        String token = extract(header);
+        if (token == null || !Boolean.TRUE.equals(redisTemplate.hasKey("Authorization:login:token:" + token))) {
+            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            byte[] body = "{\"code\":401000,\"message\":\"未登录或登录已失效\"}".getBytes(StandardCharsets.UTF_8);
+            return exchange.getResponse().writeWith(Mono.just(exchange.getResponse().bufferFactory().wrap(body)));
+        }
+        ServerHttpRequest mutated =
+                exchange.getRequest().mutate().header("X-Forwarded-User-Token", token).build();
+        return chain.filter(exchange.mutate().request(mutated).build());
     }
-    if (header.regionMatches(true, 0, "Bearer ", 0, 7)) {
-      return header.substring(7).trim();
-    }
-    return header.trim();
-  }
 
-  @Override
-  public int getOrder() {
-    return -100;
-  }
+    private boolean isPublic(String path) {
+        return PUBLIC_PREFIXES.stream().anyMatch(path::startsWith);
+    }
+
+    private String extract(String header) {
+        if (header == null || header.isBlank()) {
+            return null;
+        }
+        if (header.regionMatches(true, 0, "Bearer ", 0, 7)) {
+            return header.substring(7).trim();
+        }
+        return header.trim();
+    }
+
+    @Override
+    public int getOrder() {
+        return -100;
+    }
 }

@@ -25,40 +25,40 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "auth")
 public class AuthController {
 
-  /** 认证应用服务 */
-  private final AuthAppService authAppService;
+    /** 认证应用服务 */
+    private final AuthAppService authAppService;
 
-  public AuthController(AuthAppService authAppService) {
-    this.authAppService = authAppService;
-  }
-
-  @PostMapping("/login")
-  @Operation(summary = "登录")
-  public R<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest http) {
-    String token = authAppService.login(request.username(), request.password(), clientIp(http));
-    return R.ok(new LoginResponse(StpUtil.getTokenName(), token));
-  }
-
-  @PostMapping("/logout")
-  @Operation(summary = "登出")
-  public R<Void> logout() {
-    authAppService.logout();
-    return R.ok();
-  }
-
-  @GetMapping("/info")
-  @Operation(summary = "当前登录用户")
-  public R<AuthInfoResponse> info() {
-    User user = authAppService.currentUser();
-    return R.ok(
-        new AuthInfoResponse(user.getId(), user.getUsername(), user.getDisplayName(), user.getOrgUnitId()));
-  }
-
-  private static String clientIp(HttpServletRequest request) {
-    String forwarded = request.getHeader("X-Forwarded-For");
-    if (forwarded != null && !forwarded.isBlank()) {
-      return forwarded.split(",")[0].trim();
+    public AuthController(AuthAppService authAppService) {
+        this.authAppService = authAppService;
     }
-    return request.getRemoteAddr() == null ? "unknown" : request.getRemoteAddr();
-  }
+
+    @PostMapping("/login")
+    @Operation(summary = "登录")
+    public R<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest http) {
+        String token = authAppService.login(request.username(), request.password(), clientIp(http));
+        return R.ok(new LoginResponse(StpUtil.getTokenName(), token));
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "登出")
+    public R<Void> logout() {
+        authAppService.logout();
+        return R.ok();
+    }
+
+    @GetMapping("/info")
+    @Operation(summary = "当前登录用户")
+    public R<AuthInfoResponse> info() {
+        User user = authAppService.currentUser();
+        return R.ok(
+                new AuthInfoResponse(user.getId(), user.getUsername(), user.getDisplayName(), user.getOrgUnitId()));
+    }
+
+    private static String clientIp(HttpServletRequest request) {
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (forwarded != null && !forwarded.isBlank()) {
+            return forwarded.split(",")[0].trim();
+        }
+        return request.getRemoteAddr() == null ? "unknown" : request.getRemoteAddr();
+    }
 }

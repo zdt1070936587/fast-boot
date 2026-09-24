@@ -17,49 +17,49 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MybatisUserRepository implements UserRepository {
 
-  /** 系统用户 Mapper */
-  private final SysUserMapper sysUserMapper;
+    /** 系统用户 Mapper */
+    private final SysUserMapper sysUserMapper;
 
-  public MybatisUserRepository(SysUserMapper sysUserMapper) {
-    this.sysUserMapper = sysUserMapper;
-  }
+    public MybatisUserRepository(SysUserMapper sysUserMapper) {
+        this.sysUserMapper = sysUserMapper;
+    }
 
-  @Override
-  public Optional<User> findByUsername(String username) {
-    return sysUserMapper.findByUsername(username).map(this::toDomain);
-  }
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return sysUserMapper.findByUsername(username).map(this::toDomain);
+    }
 
-  @Override
-  public Optional<User> findById(Long id) {
-    return Optional.ofNullable(sysUserMapper.selectById(id)).map(this::toDomain);
-  }
+    @Override
+    public Optional<User> findById(Long id) {
+        return Optional.ofNullable(sysUserMapper.selectById(id)).map(this::toDomain);
+    }
 
-  @Override
-  public void updatePasswordHash(Long id, String passwordHash) {
-    sysUserMapper.update(
-        null,
-        Wrappers.<SysUserEntity>lambdaUpdate()
-            .set(SysUserEntity::getPasswordHash, passwordHash)
-            .eq(SysUserEntity::getId, id));
-  }
+    @Override
+    public void updatePasswordHash(Long id, String passwordHash) {
+        sysUserMapper.update(
+                null,
+                Wrappers.<SysUserEntity>lambdaUpdate()
+                        .set(SysUserEntity::getPasswordHash, passwordHash)
+                        .eq(SysUserEntity::getId, id));
+    }
 
-  @Override
-  public void updateOrgUnit(Long id, Long orgUnitId) {
-    sysUserMapper.update(
-        null,
-        Wrappers.<SysUserEntity>lambdaUpdate()
-            .set(SysUserEntity::getOrgUnitId, orgUnitId)
-            .eq(SysUserEntity::getId, id));
-  }
+    @Override
+    public void updateOrgUnit(Long id, Long orgUnitId) {
+        sysUserMapper.update(
+                null,
+                Wrappers.<SysUserEntity>lambdaUpdate()
+                        .set(SysUserEntity::getOrgUnitId, orgUnitId)
+                        .eq(SysUserEntity::getId, id));
+    }
 
-  private User toDomain(SysUserEntity entity) {
-    return User.restore(
-        entity.getId(),
-        entity.getUsername(),
-        entity.getDisplayName(),
-        entity.getPasswordHash(),
-        Boolean.TRUE.equals(entity.getEnabled()),
-        entity.getOrgUnitId(),
-        entity.getVersion());
-  }
+    private User toDomain(SysUserEntity entity) {
+        return User.restore(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getDisplayName(),
+                entity.getPasswordHash(),
+                Boolean.TRUE.equals(entity.getEnabled()),
+                entity.getOrgUnitId(),
+                entity.getVersion());
+    }
 }

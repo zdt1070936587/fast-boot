@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 
 class ErrorCodeTest {
 
-  @Test
-  void loginErrorIsUnauthorized() {
-    assertEquals(401, ErrorCode.USER_OR_PASSWORD.httpStatus());
-  }
+    @Test
+    void loginErrorIsUnauthorized() {
+        assertEquals(401, ErrorCode.USER_OR_PASSWORD.httpStatus());
+    }
 }

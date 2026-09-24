@@ -10,16 +10,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2026-09-19
  */
 @SpringBootApplication(
-    scanBasePackages = {
-      "com.fastboot.service.org",
-      "com.fastboot.modules.org",
-      "com.fastboot.modules.authz",
-      "com.fastboot.ddd.infrastructure",
-      "com.fastboot.ddd.interfaces",
-      "com.fastboot.cloud"
-    })
+        scanBasePackages = {
+            "com.fastboot.service.org",
+            "com.fastboot.modules.org",
+            "com.fastboot.modules.authz",
+            "com.fastboot.ddd.infrastructure",
+            "com.fastboot.ddd.interfaces",
+            "com.fastboot.cloud"
+        })
 public class OrgServiceApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(OrgServiceApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(OrgServiceApplication.class, args);
+    }
 }

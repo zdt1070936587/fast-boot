@@ -21,22 +21,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class IdempotentAspect {
 
-  /** Redisson 客户端 */
-  private final RedissonClient redissonClient;
+    /** Redisson 客户端 */
+    private final RedissonClient redissonClient;
 
-  public IdempotentAspect(RedissonClient redissonClient) {
-    this.redissonClient = redissonClient;
-  }
-
-  /** 首次请求写入幂等键并执行业务，重复请求抛出幂等冲突 */
-  @Around("@annotation(idempotent)")
-  public Object around(ProceedingJoinPoint pjp, Idempotent idempotent) throws Throwable {
-    String key = "fb:idem:" + DistributedLockAspect.eval(pjp, idempotent.key());
-    RBucket<Boolean> bucket = redissonClient.getBucket(key);
-    boolean first = bucket.setIfAbsent(Boolean.TRUE, Duration.of(idempotent.ttl(), idempotent.unit().toChronoUnit()));
-    if (!first) {
-      throw new BizException(ErrorCode.IDEMPOTENT_CONFLICT);
+    public IdempotentAspect(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
     }
-    return pjp.proceed();
-  }
+
+    /** 首次请求写入幂等键并执行业务，重复请求抛出幂等冲突 */
+    @Around("@annotation(idempotent)")
+    public Object around(ProceedingJoinPoint pjp, Idempotent idempotent) throws Throwable {
+        String key = "fb:idem:" + DistributedLockAspect.eval(pjp, idempotent.key());
+        RBucket<Boolean> bucket = redissonClient.getBucket(key);
+        boolean first = bucket.setIfAbsent(Boolean.TRUE, Duration.of(idempotent.ttl(), idempotent.unit().toChronoUnit()));
+        if (!first) {
+            throw new BizException(ErrorCode.IDEMPOTENT_CONFLICT);
+        }
+        return pjp.proceed();
+    }
 }

@@ -34,78 +34,78 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "authz")
 public class AuthzController {
 
-  /** 角色/权限/菜单目录服务 */
-  private final AuthzCatalogService catalogService;
-  /** 用户角色与授权关系应用服务 */
-  private final AuthzAppService authzAppService;
+    /** 角色/权限/菜单目录服务 */
+    private final AuthzCatalogService catalogService;
+    /** 用户角色与授权关系应用服务 */
+    private final AuthzAppService authzAppService;
 
-  public AuthzController(AuthzCatalogService catalogService, AuthzAppService authzAppService) {
-    this.catalogService = catalogService;
-    this.authzAppService = authzAppService;
-  }
+    public AuthzController(AuthzCatalogService catalogService, AuthzAppService authzAppService) {
+        this.catalogService = catalogService;
+        this.authzAppService = authzAppService;
+    }
 
-  @GetMapping("/roles")
-  @SaCheckPermission("sys:authz:read")
-  public R<PageData<RoleView>> roles() {
-    return R.ok(catalogService.listRoles());
-  }
+    @GetMapping("/roles")
+    @SaCheckPermission("sys:authz:read")
+    public R<PageData<RoleView>> roles() {
+        return R.ok(catalogService.listRoles());
+    }
 
-  @PostMapping("/roles")
-  @SaCheckPermission("sys:authz:write")
-  public R<Long> createRole(@Valid @RequestBody RoleCreateRequest request) {
-    return R.ok(catalogService.createRole(request.code(), request.name()));
-  }
+    @PostMapping("/roles")
+    @SaCheckPermission("sys:authz:write")
+    public R<Long> createRole(@Valid @RequestBody RoleCreateRequest request) {
+        return R.ok(catalogService.createRole(request.code(), request.name()));
+    }
 
-  @GetMapping("/permissions")
-  @SaCheckPermission("sys:authz:read")
-  public R<PageData<PermissionView>> permissions() {
-    return R.ok(catalogService.listPermissions());
-  }
+    @GetMapping("/permissions")
+    @SaCheckPermission("sys:authz:read")
+    public R<PageData<PermissionView>> permissions() {
+        return R.ok(catalogService.listPermissions());
+    }
 
-  @PostMapping("/permissions")
-  @SaCheckPermission("sys:authz:write")
-  public R<Long> createPermission(@Valid @RequestBody PermissionCreateRequest request) {
-    return R.ok(catalogService.createPermission(request.permType(), request.permCode(), request.name()));
-  }
+    @PostMapping("/permissions")
+    @SaCheckPermission("sys:authz:write")
+    public R<Long> createPermission(@Valid @RequestBody PermissionCreateRequest request) {
+        return R.ok(catalogService.createPermission(request.permType(), request.permCode(), request.name()));
+    }
 
-  @GetMapping("/menus")
-  @SaCheckPermission("sys:authz:read")
-  public R<List<MenuView>> menus() {
-    return R.ok(catalogService.listMenus());
-  }
+    @GetMapping("/menus")
+    @SaCheckPermission("sys:authz:read")
+    public R<List<MenuView>> menus() {
+        return R.ok(catalogService.listMenus());
+    }
 
-  @PostMapping("/menus")
-  @SaCheckPermission("sys:authz:write")
-  public R<Long> createMenu(@Valid @RequestBody MenuCreateRequest request) {
-    return R.ok(
-        catalogService.createMenu(
-            new MenuView(
-                null,
-                request.parentId(),
-                request.name(),
-                request.path(),
-                request.component(),
-                request.permCode())));
-  }
+    @PostMapping("/menus")
+    @SaCheckPermission("sys:authz:write")
+    public R<Long> createMenu(@Valid @RequestBody MenuCreateRequest request) {
+        return R.ok(
+                catalogService.createMenu(
+                        new MenuView(
+                                null,
+                                request.parentId(),
+                                request.name(),
+                                request.path(),
+                                request.component(),
+                                request.permCode())));
+    }
 
-  @PutMapping("/users/{userId}/roles")
-  @SaCheckPermission("sys:authz:write")
-  public R<Void> assignRoles(@PathVariable Long userId, @Valid @RequestBody IdListRequest request) {
-    authzAppService.assignRoles(userId, request.ids());
-    return R.ok();
-  }
+    @PutMapping("/users/{userId}/roles")
+    @SaCheckPermission("sys:authz:write")
+    public R<Void> assignRoles(@PathVariable Long userId, @Valid @RequestBody IdListRequest request) {
+        authzAppService.assignRoles(userId, request.ids());
+        return R.ok();
+    }
 
-  @PutMapping("/roles/{roleId}/permissions")
-  @SaCheckPermission("sys:authz:write")
-  public R<Void> assignPermissions(@PathVariable Long roleId, @Valid @RequestBody IdListRequest request) {
-    authzAppService.assignPermissions(roleId, request.ids());
-    return R.ok();
-  }
+    @PutMapping("/roles/{roleId}/permissions")
+    @SaCheckPermission("sys:authz:write")
+    public R<Void> assignPermissions(@PathVariable Long roleId, @Valid @RequestBody IdListRequest request) {
+        authzAppService.assignPermissions(roleId, request.ids());
+        return R.ok();
+    }
 
-  @PutMapping("/roles/{roleId}/menus")
-  @SaCheckPermission("sys:authz:write")
-  public R<Void> assignMenus(@PathVariable Long roleId, @Valid @RequestBody IdListRequest request) {
-    authzAppService.assignMenus(roleId, request.ids());
-    return R.ok();
-  }
+    @PutMapping("/roles/{roleId}/menus")
+    @SaCheckPermission("sys:authz:write")
+    public R<Void> assignMenus(@PathVariable Long roleId, @Valid @RequestBody IdListRequest request) {
+        authzAppService.assignMenus(roleId, request.ids());
+        return R.ok();
+    }
 }

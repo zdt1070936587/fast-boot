@@ -18,19 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/internal/permissions")
 public class InternalPermissionController {
 
-  /** 权限查询端口 */
-  private final PermissionQueryPort permissionQueryPort;
+    /** 权限查询端口 */
+    private final PermissionQueryPort permissionQueryPort;
 
-  public InternalPermissionController(PermissionQueryPort permissionQueryPort) {
-    this.permissionQueryPort = permissionQueryPort;
-  }
+    public InternalPermissionController(PermissionQueryPort permissionQueryPort) {
+        this.permissionQueryPort = permissionQueryPort;
+    }
 
-  @GetMapping("/{userId}")
-  public R<PermissionSnapshot> get(@PathVariable Long userId) {
-    return R.ok(
-        new PermissionSnapshot(
-            userId,
-            permissionQueryPort.listByUserId(userId),
-            permissionQueryPort.listRolesByUserId(userId)));
-  }
+    @GetMapping("/{userId}")
+    public R<PermissionSnapshot> get(@PathVariable Long userId) {
+        return R.ok(
+                new PermissionSnapshot(
+                        userId,
+                        permissionQueryPort.listByUserId(userId),
+                        permissionQueryPort.listRolesByUserId(userId)));
+    }
 }

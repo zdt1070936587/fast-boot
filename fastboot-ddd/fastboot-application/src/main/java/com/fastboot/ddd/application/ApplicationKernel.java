@@ -7,5 +7,5 @@ package com.fastboot.ddd.application;
  * @since 2026-09-19
  */
 public final class ApplicationKernel {
-  private ApplicationKernel() {}
+    private ApplicationKernel() {}
 }

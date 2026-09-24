@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/users")
 public class UserOrgController {
 
-  /** 认证应用服务 */
-  private final AuthAppService authAppService;
+    /** 认证应用服务 */
+    private final AuthAppService authAppService;
 
-  public UserOrgController(AuthAppService authAppService) {
-    this.authAppService = authAppService;
-  }
+    public UserOrgController(AuthAppService authAppService) {
+        this.authAppService = authAppService;
+    }
 
-  @PutMapping("/{userId}/org/{orgUnitId}")
-  @SaCheckPermission("sys:org:write")
-  public R<Void> assignOrg(@PathVariable Long userId, @PathVariable Long orgUnitId) {
-    authAppService.assignOrg(userId, orgUnitId);
-    return R.ok();
-  }
+    @PutMapping("/{userId}/org/{orgUnitId}")
+    @SaCheckPermission("sys:org:write")
+    public R<Void> assignOrg(@PathVariable Long userId, @PathVariable Long orgUnitId) {
+        authAppService.assignOrg(userId, orgUnitId);
+        return R.ok();
+    }
 }

@@ -10,13 +10,13 @@ import java.util.Optional;
  * @since 2026-09-19
  */
 public interface OrgUnitRepository {
-  OrgUnit save(OrgUnit unit);
+    OrgUnit save(OrgUnit unit);
 
-  Optional<OrgUnit> findById(Long id);
+    Optional<OrgUnit> findById(Long id);
 
-  List<OrgUnit> findAll();
+    List<OrgUnit> findAll();
 
-  List<OrgUnit> findByPathPrefix(String pathPrefix);
+    List<OrgUnit> findByPathPrefix(String pathPrefix);
 
-  void deleteById(Long id);
+    void deleteById(Long id);
 }

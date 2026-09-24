@@ -7,7 +7,7 @@ package com.fastboot.modules.org.interfaces.dto;
  * @since 2026-09-19
  */
 public record OrgView(
-    /** 组织 ID */ Long id,
-    /** 上级组织 ID */ Long parentId,
-    /** 组织名称 */ String name,
-    /** 物化路径 */ String path) {}
+        /** 组织 ID */ Long id,
+        /** 上级组织 ID */ Long parentId,
+        /** 组织名称 */ String name,
+        /** 物化路径 */ String path) {}

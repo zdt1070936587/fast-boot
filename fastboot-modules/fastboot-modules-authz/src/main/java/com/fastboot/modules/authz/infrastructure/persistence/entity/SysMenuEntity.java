@@ -16,76 +16,76 @@ import java.time.OffsetDateTime;
  */
 @TableName("sys_menu")
 public class SysMenuEntity {
-  /** 主键 ID */
-  @TableId(type = IdType.AUTO)
-  private Long id;
+    /** 主键 ID */
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
-  /** 父菜单 ID */
-  private Long parentId;
-  /** 菜单名称 */
-  private String name;
-  /** 前端路由路径 */
-  private String path;
-  /** 前端组件路径 */
-  private String component;
-  /** 访问所需权限编码 */
-  private String permCode;
-  /** 乐观锁版本号 */
-  @Version private Long version;
+    /** 父菜单 ID */
+    private Long parentId;
+    /** 菜单名称 */
+    private String name;
+    /** 前端路由路径 */
+    private String path;
+    /** 前端组件路径 */
+    private String component;
+    /** 访问所需权限编码 */
+    private String permCode;
+    /** 乐观锁版本号 */
+    @Version private Long version;
 
-  /** 创建时间 */
-  @TableField(fill = FieldFill.INSERT)
-  private OffsetDateTime createdAt;
+    /** 创建时间 */
+    @TableField(fill = FieldFill.INSERT)
+    private OffsetDateTime createdAt;
 
-  /** 更新时间 */
-  @TableField(fill = FieldFill.INSERT_UPDATE)
-  private OffsetDateTime updatedAt;
+    /** 更新时间 */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private OffsetDateTime updatedAt;
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public Long getParentId() {
-    return parentId;
-  }
+    public Long getParentId() {
+        return parentId;
+    }
 
-  public void setParentId(Long parentId) {
-    this.parentId = parentId;
-  }
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getPath() {
-    return path;
-  }
+    public String getPath() {
+        return path;
+    }
 
-  public void setPath(String path) {
-    this.path = path;
-  }
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-  public String getComponent() {
-    return component;
-  }
+    public String getComponent() {
+        return component;
+    }
 
-  public void setComponent(String component) {
-    this.component = component;
-  }
+    public void setComponent(String component) {
+        this.component = component;
+    }
 
-  public String getPermCode() {
-    return permCode;
-  }
+    public String getPermCode() {
+        return permCode;
+    }
 
-  public void setPermCode(String permCode) {
-    this.permCode = permCode;
-  }
+    public void setPermCode(String permCode) {
+        this.permCode = permCode;
+    }
 }

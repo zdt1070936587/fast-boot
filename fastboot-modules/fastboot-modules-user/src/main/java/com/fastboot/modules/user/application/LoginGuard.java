@@ -19,32 +19,32 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginGuard {
 
-  /** Redisson 客户端，用于分布式限流与计数 */
-  private final RedissonClient redissonClient;
+    /** Redisson 客户端，用于分布式限流与计数 */
+    private final RedissonClient redissonClient;
 
-  public LoginGuard(RedissonClient redissonClient) {
-    this.redissonClient = redissonClient;
-  }
-
-  public void assertAllowed(String username, String clientIp) {
-    RRateLimiter limiter = redissonClient.getRateLimiter("fb:login:rl:" + clientIp);
-    limiter.trySetRate(RateType.OVERALL, 20, 1, RateIntervalUnit.MINUTES);
-    if (!limiter.tryAcquire()) {
-      throw new BizException(ErrorCode.LOGIN_RATE_LIMITED);
+    public LoginGuard(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
     }
-    RAtomicLong fails = redissonClient.getAtomicLong("fb:login:fail:" + username);
-    if (fails.get() >= 5) {
-      throw new BizException(ErrorCode.LOGIN_LOCKED);
+
+    public void assertAllowed(String username, String clientIp) {
+        RRateLimiter limiter = redissonClient.getRateLimiter("fb:login:rl:" + clientIp);
+        limiter.trySetRate(RateType.OVERALL, 20, 1, RateIntervalUnit.MINUTES);
+        if (!limiter.tryAcquire()) {
+            throw new BizException(ErrorCode.LOGIN_RATE_LIMITED);
+        }
+        RAtomicLong fails = redissonClient.getAtomicLong("fb:login:fail:" + username);
+        if (fails.get() >= 5) {
+            throw new BizException(ErrorCode.LOGIN_LOCKED);
+        }
     }
-  }
 
-  public void onFailure(String username) {
-    RAtomicLong fails = redissonClient.getAtomicLong("fb:login:fail:" + username);
-    fails.incrementAndGet();
-    fails.expire(Duration.ofMinutes(15));
-  }
+    public void onFailure(String username) {
+        RAtomicLong fails = redissonClient.getAtomicLong("fb:login:fail:" + username);
+        fails.incrementAndGet();
+        fails.expire(Duration.ofMinutes(15));
+    }
 
-  public void onSuccess(String username) {
-    redissonClient.getAtomicLong("fb:login:fail:" + username).delete();
-  }
+    public void onSuccess(String username) {
+        redissonClient.getAtomicLong("fb:login:fail:" + username).delete();
+    }
 }

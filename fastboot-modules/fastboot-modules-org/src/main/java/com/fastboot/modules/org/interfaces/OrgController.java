@@ -29,29 +29,29 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "org")
 public class OrgController {
 
-  /** 组织树应用服务 */
-  private final OrgAppService orgAppService;
+    /** 组织树应用服务 */
+    private final OrgAppService orgAppService;
 
-  public OrgController(OrgAppService orgAppService) {
-    this.orgAppService = orgAppService;
-  }
+    public OrgController(OrgAppService orgAppService) {
+        this.orgAppService = orgAppService;
+    }
 
-  @GetMapping
-  @SaCheckPermission("sys:org:read")
-  public R<List<OrgView>> list() {
-    return R.ok(orgAppService.list(StpUtil.getLoginIdAsLong(), null));
-  }
+    @GetMapping
+    @SaCheckPermission("sys:org:read")
+    public R<List<OrgView>> list() {
+        return R.ok(orgAppService.list(StpUtil.getLoginIdAsLong(), null));
+    }
 
-  @PostMapping
-  @SaCheckPermission("sys:org:write")
-  public R<Long> create(@Valid @RequestBody OrgCreateRequest request) {
-    return R.ok(orgAppService.create(request.parentId(), request.name()));
-  }
+    @PostMapping
+    @SaCheckPermission("sys:org:write")
+    public R<Long> create(@Valid @RequestBody OrgCreateRequest request) {
+        return R.ok(orgAppService.create(request.parentId(), request.name()));
+    }
 
-  @PutMapping("/{id}/move")
-  @SaCheckPermission("sys:org:write")
-  public R<Void> move(@PathVariable Long id, @Valid @RequestBody OrgMoveRequest request) {
-    orgAppService.move(id, request.parentId());
-    return R.ok();
-  }
+    @PutMapping("/{id}/move")
+    @SaCheckPermission("sys:org:write")
+    public R<Void> move(@PathVariable Long id, @Valid @RequestBody OrgMoveRequest request) {
+        orgAppService.move(id, request.parentId());
+        return R.ok();
+    }
 }

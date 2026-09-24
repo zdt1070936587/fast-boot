@@ -9,10 +9,10 @@ import com.fastboot.ddd.domain.model.AggregateRoot;
  * @since 2026-09-19
  */
 public class __NAME__ extends AggregateRoot<Long> {
-  /** 名称 */
-  private String name;
+    /** 名称 */
+    private String name;
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 }

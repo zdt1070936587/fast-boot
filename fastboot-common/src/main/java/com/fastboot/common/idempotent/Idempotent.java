@@ -15,12 +15,12 @@ import java.util.concurrent.TimeUnit;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Idempotent {
-  /** 幂等键表达式，支持 SpEL（如 {@code #orderId}） */
-  String key();
+    /** 幂等键表达式，支持 SpEL（如 {@code #orderId}） */
+    String key();
 
-  /** 幂等记录存活时间，默认 10 */
-  long ttl() default 10;
+    /** 幂等记录存活时间，默认 10 */
+    long ttl() default 10;
 
-  /** {@link #ttl()} 的时间单位，默认秒 */
-  TimeUnit unit() default TimeUnit.SECONDS;
+    /** {@link #ttl()} 的时间单位，默认秒 */
+    TimeUnit unit() default TimeUnit.SECONDS;
 }

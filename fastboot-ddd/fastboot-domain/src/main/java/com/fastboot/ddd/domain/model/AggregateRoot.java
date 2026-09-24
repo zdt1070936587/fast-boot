@@ -10,44 +10,44 @@ import java.time.OffsetDateTime;
  * @since 2026-09-19
  */
 public abstract class AggregateRoot<ID extends Serializable> implements Serializable {
-  /** 聚合根主键 */
-  private ID id;
-  /** 乐观锁版本号 */
-  private Long version;
-  /** 创建时间 */
-  private OffsetDateTime createdAt;
-  /** 最后更新时间 */
-  private OffsetDateTime updatedAt;
+    /** 聚合根主键 */
+    private ID id;
+    /** 乐观锁版本号 */
+    private Long version;
+    /** 创建时间 */
+    private OffsetDateTime createdAt;
+    /** 最后更新时间 */
+    private OffsetDateTime updatedAt;
 
-  public ID getId() {
-    return id;
-  }
+    public ID getId() {
+        return id;
+    }
 
-  public void setId(ID id) {
-    this.id = id;
-  }
+    public void setId(ID id) {
+        this.id = id;
+    }
 
-  public Long getVersion() {
-    return version;
-  }
+    public Long getVersion() {
+        return version;
+    }
 
-  public void setVersion(Long version) {
-    this.version = version;
-  }
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 
-  public OffsetDateTime getCreatedAt() {
-    return createdAt;
-  }
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-  public void setCreatedAt(OffsetDateTime createdAt) {
-    this.createdAt = createdAt;
-  }
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-  public OffsetDateTime getUpdatedAt() {
-    return updatedAt;
-  }
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
-  public void setUpdatedAt(OffsetDateTime updatedAt) {
-    this.updatedAt = updatedAt;
-  }
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

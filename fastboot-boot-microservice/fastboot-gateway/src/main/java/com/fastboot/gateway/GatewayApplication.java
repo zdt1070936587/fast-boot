@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication(scanBasePackages = "com.fastboot.gateway")
 public class GatewayApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(GatewayApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(GatewayApplication.class, args);
+    }
 }

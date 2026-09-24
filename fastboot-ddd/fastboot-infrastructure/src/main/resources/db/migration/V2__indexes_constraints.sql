@@ -8,60 +8,60 @@ alter table sys_menu add column if not exists version bigint not null default 0;
 alter table sys_third_party_identity drop column if exists access_token;
 
 alter table sys_org_unit
-  drop constraint if exists fk_org_parent;
+    drop constraint if exists fk_org_parent;
 alter table sys_org_unit
-  add constraint fk_org_parent foreign key (parent_id) references sys_org_unit (id);
+    add constraint fk_org_parent foreign key (parent_id) references sys_org_unit (id);
 
 alter table sys_user
-  drop constraint if exists fk_user_org;
+    drop constraint if exists fk_user_org;
 alter table sys_user
-  add constraint fk_user_org foreign key (org_unit_id) references sys_org_unit (id);
+    add constraint fk_user_org foreign key (org_unit_id) references sys_org_unit (id);
 
 alter table rel_user_role
-  drop constraint if exists fk_ur_user;
+    drop constraint if exists fk_ur_user;
 alter table rel_user_role
-  add constraint fk_ur_user foreign key (user_id) references sys_user (id);
+    add constraint fk_ur_user foreign key (user_id) references sys_user (id);
 alter table rel_user_role
-  drop constraint if exists fk_ur_role;
+    drop constraint if exists fk_ur_role;
 alter table rel_user_role
-  add constraint fk_ur_role foreign key (role_id) references sys_role (id);
+    add constraint fk_ur_role foreign key (role_id) references sys_role (id);
 
 alter table rel_role_permission
-  drop constraint if exists fk_rp_role;
+    drop constraint if exists fk_rp_role;
 alter table rel_role_permission
-  add constraint fk_rp_role foreign key (role_id) references sys_role (id);
+    add constraint fk_rp_role foreign key (role_id) references sys_role (id);
 alter table rel_role_permission
-  drop constraint if exists fk_rp_perm;
+    drop constraint if exists fk_rp_perm;
 alter table rel_role_permission
-  add constraint fk_rp_perm foreign key (permission_id) references sys_permission (id);
+    add constraint fk_rp_perm foreign key (permission_id) references sys_permission (id);
 
 alter table rel_role_menu
-  drop constraint if exists fk_rm_role;
+    drop constraint if exists fk_rm_role;
 alter table rel_role_menu
-  add constraint fk_rm_role foreign key (role_id) references sys_role (id);
+    add constraint fk_rm_role foreign key (role_id) references sys_role (id);
 alter table rel_role_menu
-  drop constraint if exists fk_rm_menu;
+    drop constraint if exists fk_rm_menu;
 alter table rel_role_menu
-  add constraint fk_rm_menu foreign key (menu_id) references sys_menu (id);
+    add constraint fk_rm_menu foreign key (menu_id) references sys_menu (id);
 
 alter table sys_third_party_identity
-  drop constraint if exists fk_tpi_user;
+    drop constraint if exists fk_tpi_user;
 alter table sys_third_party_identity
-  add constraint fk_tpi_user foreign key (user_id) references sys_user (id);
+    add constraint fk_tpi_user foreign key (user_id) references sys_user (id);
 
 alter table sys_role_data_scope
-  drop constraint if exists fk_rds_role;
+    drop constraint if exists fk_rds_role;
 alter table sys_role_data_scope
-  add constraint fk_rds_role foreign key (role_id) references sys_role (id);
+    add constraint fk_rds_role foreign key (role_id) references sys_role (id);
 
 alter table rel_role_data_scope_org
-  drop constraint if exists fk_rdso_role;
+    drop constraint if exists fk_rdso_role;
 alter table rel_role_data_scope_org
-  add constraint fk_rdso_role foreign key (role_id) references sys_role (id);
+    add constraint fk_rdso_role foreign key (role_id) references sys_role (id);
 alter table rel_role_data_scope_org
-  drop constraint if exists fk_rdso_org;
+    drop constraint if exists fk_rdso_org;
 alter table rel_role_data_scope_org
-  add constraint fk_rdso_org foreign key (org_unit_id) references sys_org_unit (id);
+    add constraint fk_rdso_org foreign key (org_unit_id) references sys_org_unit (id);
 
 create index if not exists idx_org_parent on sys_org_unit (parent_id);
 create index if not exists idx_org_path on sys_org_unit (path);
@@ -89,8 +89,8 @@ select r.id, p.id
 from sys_role r
 cross join sys_permission p
 where r.code = 'ADMIN'
-  and p.perm_code in ('sys:org:write', 'sys:org:read', 'sys:authz:write', 'sys:authz:read', 'sys:demo:read')
-  and not exists (
-    select 1 from rel_role_permission rp
-    where rp.role_id = r.id and rp.permission_id = p.id
-  );
+    and p.perm_code in ('sys:org:write', 'sys:org:read', 'sys:authz:write', 'sys:authz:read', 'sys:demo:read')
+    and not exists (
+        select 1 from rel_role_permission rp
+        where rp.role_id = r.id and rp.permission_id = p.id
+    );

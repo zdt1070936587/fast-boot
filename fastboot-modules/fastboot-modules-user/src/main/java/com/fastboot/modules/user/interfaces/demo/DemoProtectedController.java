@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/demo")
 public class DemoProtectedController {
 
-  @GetMapping("/ping")
-  @SaCheckPermission("sys:demo:read")
-  public R<String> ping() {
-    return R.ok("pong");
-  }
+    @GetMapping("/ping")
+    @SaCheckPermission("sys:demo:read")
+    public R<String> ping() {
+        return R.ok("pong");
+    }
 }

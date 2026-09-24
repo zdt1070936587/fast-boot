@@ -11,60 +11,60 @@ import com.fastboot.ddd.domain.model.AggregateRoot;
  * @since 2026-09-19
  */
 public class OrgUnit extends AggregateRoot<Long> {
-  /** 上级组织 ID */
-  private Long parentId;
-  /** 组织名称 */
-  private String name;
-  /** 物化路径（用于子树查询与移动） */
-  private String path;
+    /** 上级组织 ID */
+    private Long parentId;
+    /** 组织名称 */
+    private String name;
+    /** 物化路径（用于子树查询与移动） */
+    private String path;
 
-  public static OrgUnit create(Long parentId, String name, String parentPath) {
-    OrgUnit unit = new OrgUnit();
-    unit.parentId = parentId;
-    unit.name = name;
-    unit.path = parentPath == null || parentPath.isBlank() ? "" : parentPath;
-    return unit;
-  }
-
-  public static OrgUnit restore(Long id, Long parentId, String name, String path, Long version) {
-    OrgUnit unit = new OrgUnit();
-    unit.setId(id);
-    unit.parentId = parentId;
-    unit.name = name;
-    unit.path = path;
-    unit.setVersion(version);
-    return unit;
-  }
-
-  public void assignIdToPath() {
-    if (getId() == null) {
-      throw new BizException(ErrorCode.INTERNAL_ERROR, "组织尚未持久化");
+    public static OrgUnit create(Long parentId, String name, String parentPath) {
+        OrgUnit unit = new OrgUnit();
+        unit.parentId = parentId;
+        unit.name = name;
+        unit.path = parentPath == null || parentPath.isBlank() ? "" : parentPath;
+        return unit;
     }
-    String prefix = path == null ? "" : path;
-    if (!prefix.endsWith("/") && !prefix.isBlank()) {
-      prefix = prefix + "/";
+
+    public static OrgUnit restore(Long id, Long parentId, String name, String path, Long version) {
+        OrgUnit unit = new OrgUnit();
+        unit.setId(id);
+        unit.parentId = parentId;
+        unit.name = name;
+        unit.path = path;
+        unit.setVersion(version);
+        return unit;
     }
-    this.path = prefix + getId() + "/";
-  }
 
-  public void moveTo(OrgUnit newParent) {
-    this.parentId = newParent.getId();
-    this.path = newParent.getPath() + getId() + "/";
-  }
+    public void assignIdToPath() {
+        if (getId() == null) {
+            throw new BizException(ErrorCode.INTERNAL_ERROR, "组织尚未持久化");
+        }
+        String prefix = path == null ? "" : path;
+        if (!prefix.endsWith("/") && !prefix.isBlank()) {
+            prefix = prefix + "/";
+        }
+        this.path = prefix + getId() + "/";
+    }
 
-  public Long getParentId() {
-    return parentId;
-  }
+    public void moveTo(OrgUnit newParent) {
+        this.parentId = newParent.getId();
+        this.path = newParent.getPath() + getId() + "/";
+    }
 
-  public String getName() {
-    return name;
-  }
+    public Long getParentId() {
+        return parentId;
+    }
 
-  public void rename(String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getPath() {
-    return path;
-  }
+    public void rename(String name) {
+        this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
 }

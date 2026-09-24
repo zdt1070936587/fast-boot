@@ -14,6 +14,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OperationLog {
-  /** 操作名称或业务动作描述 */
-  String value();
+    /** 操作名称或业务动作描述 */
+    String value();
 }

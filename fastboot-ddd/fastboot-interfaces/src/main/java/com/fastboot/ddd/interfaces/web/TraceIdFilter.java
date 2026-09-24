@@ -22,21 +22,21 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TraceIdFilter extends OncePerRequestFilter {
 
-  /** 从请求头读取或生成 traceId，绑定 MDC 并在响应结束后清理 */
-  @Override
-  protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
-    String traceId = request.getHeader(TraceIdHolder.HEADER);
-    if (traceId == null || traceId.isBlank()) {
-      traceId = UUID.randomUUID().toString().replace("-", "");
+    /** 从请求头读取或生成 traceId，绑定 MDC 并在响应结束后清理 */
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String traceId = request.getHeader(TraceIdHolder.HEADER);
+        if (traceId == null || traceId.isBlank()) {
+            traceId = UUID.randomUUID().toString().replace("-", "");
+        }
+        TraceIdHolder.set(traceId);
+        response.setHeader(TraceIdHolder.HEADER, traceId);
+        try {
+            filterChain.doFilter(request, response);
+        } finally {
+            TraceIdHolder.clear();
+        }
     }
-    TraceIdHolder.set(traceId);
-    response.setHeader(TraceIdHolder.HEADER, traceId);
-    try {
-      filterChain.doFilter(request, response);
-    } finally {
-      TraceIdHolder.clear();
-    }
-  }
 }

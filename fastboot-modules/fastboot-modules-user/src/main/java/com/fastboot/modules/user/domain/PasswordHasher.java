@@ -7,7 +7,7 @@ package com.fastboot.modules.user.domain;
  * @since 2026-09-19
  */
 public interface PasswordHasher {
-  boolean matches(String raw, String hash);
+    boolean matches(String raw, String hash);
 
-  String hash(String raw);
+    String hash(String raw);
 }

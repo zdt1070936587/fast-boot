@@ -18,15 +18,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class OperationLogAspect {
 
-  /** 审计日志记录器 */
-  private static final Logger log = LoggerFactory.getLogger(OperationLogAspect.class);
+    /** 审计日志记录器 */
+    private static final Logger log = LoggerFactory.getLogger(OperationLogAspect.class);
 
-  /** 方法正常返回后写入审计日志 */
-  @AfterReturning(pointcut = "@annotation(operationLog)", returning = "result")
-  public void after(JoinPoint joinPoint, OperationLog operationLog, Object result) {
-    log.info("audit action={} method={} args={}",
-        operationLog.value(),
-        joinPoint.getSignature().toShortString(),
-        joinPoint.getArgs());
-  }
+    /** 方法正常返回后写入审计日志 */
+    @AfterReturning(pointcut = "@annotation(operationLog)", returning = "result")
+    public void after(JoinPoint joinPoint, OperationLog operationLog, Object result) {
+        log.info("audit action={} method={} args={}",
+                operationLog.value(),
+                joinPoint.getSignature().toShortString(),
+                joinPoint.getArgs());
+    }
 }

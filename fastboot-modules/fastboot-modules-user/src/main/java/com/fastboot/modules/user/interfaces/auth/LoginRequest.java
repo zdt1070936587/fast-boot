@@ -12,5 +12,5 @@ import jakarta.validation.constraints.NotBlank;
  * @since 2026-09-19
  */
 public record LoginRequest(
-    @NotBlank(message = "不能为空") String username,
-    @NotBlank(message = "不能为空") String password) {}
+        @NotBlank(message = "不能为空") String username,
+        @NotBlank(message = "不能为空") String password) {}

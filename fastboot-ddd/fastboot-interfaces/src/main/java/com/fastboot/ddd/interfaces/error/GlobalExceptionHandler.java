@@ -26,77 +26,77 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  /** 异常处理日志 */
-  private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    /** 异常处理日志 */
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-  /** 处理业务异常 */
-  @ExceptionHandler(BizException.class)
-  public ResponseEntity<R<Void>> handleBiz(BizException ex) {
-    log.warn("biz error code={} msg={}", ex.getCode(), ex.getMessage());
-    HttpStatus status = HttpStatus.resolve(ex.getHttpStatus());
-    if (status == null) {
-      status = HttpStatus.OK;
+    /** 处理业务异常 */
+    @ExceptionHandler(BizException.class)
+    public ResponseEntity<R<Void>> handleBiz(BizException ex) {
+        log.warn("biz error code={} msg={}", ex.getCode(), ex.getMessage());
+        HttpStatus status = HttpStatus.resolve(ex.getHttpStatus());
+        if (status == null) {
+            status = HttpStatus.OK;
+        }
+        return ResponseEntity.status(status).body(R.fail(ex.getCode(), ex.getMessage()));
     }
-    return ResponseEntity.status(status).body(R.fail(ex.getCode(), ex.getMessage()));
-  }
 
-  /** 处理未登录 */
-  @ExceptionHandler(NotLoginException.class)
-  public ResponseEntity<R<Void>> handleNotLogin(NotLoginException ex) {
-    log.warn("not login: {}", ex.getMessage());
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-        .body(R.fail(ErrorCode.UNAUTHORIZED.code(), ErrorCode.UNAUTHORIZED.message()));
-  }
+    /** 处理未登录 */
+    @ExceptionHandler(NotLoginException.class)
+    public ResponseEntity<R<Void>> handleNotLogin(NotLoginException ex) {
+        log.warn("not login: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(R.fail(ErrorCode.UNAUTHORIZED.code(), ErrorCode.UNAUTHORIZED.message()));
+    }
 
-  /** 处理无权限 */
-  @ExceptionHandler(NotPermissionException.class)
-  public ResponseEntity<R<Void>> handleNotPermission(NotPermissionException ex) {
-    log.warn("forbidden: {}", ex.getMessage());
-    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-        .body(R.fail(ErrorCode.FORBIDDEN.code(), ErrorCode.FORBIDDEN.message()));
-  }
+    /** 处理无权限 */
+    @ExceptionHandler(NotPermissionException.class)
+    public ResponseEntity<R<Void>> handleNotPermission(NotPermissionException ex) {
+        log.warn("forbidden: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(R.fail(ErrorCode.FORBIDDEN.code(), ErrorCode.FORBIDDEN.message()));
+    }
 
-  /** 处理 Bean Validation 参数校验失败 */
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<R<Void>> handleValid(MethodArgumentNotValidException ex) {
-    String msg =
-        ex.getBindingResult().getFieldErrors().stream()
-            .findFirst()
-            .map(err -> err.getField() + " " + err.getDefaultMessage())
-            .orElse(ErrorCode.VALIDATION_FAILED.message());
-    log.warn("validation failed: {}", msg);
-    return ResponseEntity.badRequest().body(R.fail(ErrorCode.VALIDATION_FAILED.code(), msg));
-  }
+    /** 处理 Bean Validation 参数校验失败 */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<R<Void>> handleValid(MethodArgumentNotValidException ex) {
+        String msg =
+                ex.getBindingResult().getFieldErrors().stream()
+                        .findFirst()
+                        .map(err -> err.getField() + " " + err.getDefaultMessage())
+                        .orElse(ErrorCode.VALIDATION_FAILED.message());
+        log.warn("validation failed: {}", msg);
+        return ResponseEntity.badRequest().body(R.fail(ErrorCode.VALIDATION_FAILED.code(), msg));
+    }
 
-  /** 处理约束校验异常 */
-  @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<R<Void>> handleConstraint(ConstraintViolationException ex) {
-    log.warn("constraint: {}", ex.getMessage());
-    return ResponseEntity.badRequest()
-        .body(R.fail(ErrorCode.VALIDATION_FAILED.code(), ex.getMessage()));
-  }
+    /** 处理约束校验异常 */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<R<Void>> handleConstraint(ConstraintViolationException ex) {
+        log.warn("constraint: {}", ex.getMessage());
+        return ResponseEntity.badRequest()
+                .body(R.fail(ErrorCode.VALIDATION_FAILED.code(), ex.getMessage()));
+    }
 
-  /** 处理不可读的请求体 */
-  @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<R<Void>> handleUnreadable(HttpMessageNotReadableException ex) {
-    log.warn("bad request body: {}", ex.getMessage());
-    return ResponseEntity.badRequest()
-        .body(R.fail(ErrorCode.VALIDATION_FAILED.code(), "请求体无法解析"));
-  }
+    /** 处理不可读的请求体 */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<R<Void>> handleUnreadable(HttpMessageNotReadableException ex) {
+        log.warn("bad request body: {}", ex.getMessage());
+        return ResponseEntity.badRequest()
+                .body(R.fail(ErrorCode.VALIDATION_FAILED.code(), "请求体无法解析"));
+    }
 
-  /** 处理 404 无路由 */
-  @ExceptionHandler(NoHandlerFoundException.class)
-  public ResponseEntity<R<Void>> handle404(NoHandlerFoundException ex) {
-    log.warn("not found: {}", ex.getRequestURL());
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body(R.fail(ErrorCode.NOT_FOUND.code(), ErrorCode.NOT_FOUND.message()));
-  }
+    /** 处理 404 无路由 */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<R<Void>> handle404(NoHandlerFoundException ex) {
+        log.warn("not found: {}", ex.getRequestURL());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(R.fail(ErrorCode.NOT_FOUND.code(), ErrorCode.NOT_FOUND.message()));
+    }
 
-  /** 兜底处理未捕获异常 */
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<R<Void>> handleAny(Exception ex, HttpServletRequest request) {
-    log.error("unhandled {} {}", request.getMethod(), request.getRequestURI(), ex);
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(R.fail(ErrorCode.INTERNAL_ERROR.code(), ErrorCode.INTERNAL_ERROR.message()));
-  }
+    /** 兜底处理未捕获异常 */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<R<Void>> handleAny(Exception ex, HttpServletRequest request) {
+        log.error("unhandled {} {}", request.getMethod(), request.getRequestURI(), ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(R.fail(ErrorCode.INTERNAL_ERROR.code(), ErrorCode.INTERNAL_ERROR.message()));
+    }
 }

@@ -9,9 +9,9 @@ import java.util.List;
  * @since 2026-09-19
  */
 public interface PermissionQueryPort {
-  List<String> listByUserId(Long userId);
+    List<String> listByUserId(Long userId);
 
-  List<String> listRolesByUserId(Long userId);
+    List<String> listRolesByUserId(Long userId);
 
-  void evict(Long userId);
+    void evict(Long userId);
 }

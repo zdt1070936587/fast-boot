@@ -22,38 +22,38 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "fastboot.admin.bootstrap", havingValue = "true")
 public class AdminPasswordBootstrap implements ApplicationRunner {
 
-  /** 日志记录器 */
-  private static final Logger log = LoggerFactory.getLogger(AdminPasswordBootstrap.class);
+    /** 日志记录器 */
+    private static final Logger log = LoggerFactory.getLogger(AdminPasswordBootstrap.class);
 
-  /** 用户仓储 */
-  private final UserRepository userRepository;
-  /** 密码哈希器 */
-  private final PasswordHasher passwordHasher;
-  /** 配置中的 admin 初始密码 */
-  private final String adminPassword;
+    /** 用户仓储 */
+    private final UserRepository userRepository;
+    /** 密码哈希器 */
+    private final PasswordHasher passwordHasher;
+    /** 配置中的 admin 初始密码 */
+    private final String adminPassword;
 
-  public AdminPasswordBootstrap(
-      UserRepository userRepository,
-      PasswordHasher passwordHasher,
-      @Value("${fastboot.admin.password:}") String adminPassword) {
-    this.userRepository = userRepository;
-    this.passwordHasher = passwordHasher;
-    this.adminPassword = adminPassword;
-  }
-
-  @Override
-  public void run(ApplicationArguments args) {
-    if (adminPassword == null || adminPassword.isBlank()) {
-      throw new IllegalStateException("fastboot.admin.bootstrap=true 时必须设置 fastboot.admin.password");
+    public AdminPasswordBootstrap(
+            UserRepository userRepository,
+            PasswordHasher passwordHasher,
+            @Value("${fastboot.admin.password:}") String adminPassword) {
+        this.userRepository = userRepository;
+        this.passwordHasher = passwordHasher;
+        this.adminPassword = adminPassword;
     }
-    userRepository
-        .findByUsername("admin")
-        .ifPresent(
-            user -> {
-              if (!user.hasPassword()) {
-                userRepository.updatePasswordHash(user.getId(), passwordHasher.hash(adminPassword));
-                log.warn("local profile: initialized admin password from configuration");
-              }
-            });
-  }
+
+    @Override
+    public void run(ApplicationArguments args) {
+        if (adminPassword == null || adminPassword.isBlank()) {
+            throw new IllegalStateException("fastboot.admin.bootstrap=true 时必须设置 fastboot.admin.password");
+        }
+        userRepository
+                .findByUsername("admin")
+                .ifPresent(
+                        user -> {
+                            if (!user.hasPassword()) {
+                                userRepository.updatePasswordHash(user.getId(), passwordHasher.hash(adminPassword));
+                                log.warn("local profile: initialized admin password from configuration");
+                            }
+                        });
+    }
 }

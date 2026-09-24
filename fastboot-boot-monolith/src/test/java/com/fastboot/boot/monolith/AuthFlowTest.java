@@ -29,82 +29,82 @@ import org.testcontainers.utility.DockerImageName;
 @ActiveProfiles("test")
 class AuthFlowTest {
 
-  @Container
-  static final PostgreSQLContainer<?> POSTGRES =
-      new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
-          .withDatabaseName("fastboot")
-          .withUsername("fastboot")
-          .withPassword("fastboot");
+    @Container
+    static final PostgreSQLContainer<?> POSTGRES =
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
+                    .withDatabaseName("fastboot")
+                    .withUsername("fastboot")
+                    .withPassword("fastboot");
 
-  @Container
-  static final GenericContainer<?> REDIS =
-      new GenericContainer<>(DockerImageName.parse("redis:7-alpine")).withExposedPorts(6379);
+    @Container
+    static final GenericContainer<?> REDIS =
+            new GenericContainer<>(DockerImageName.parse("redis:7-alpine")).withExposedPorts(6379);
 
-  @DynamicPropertySource
-  static void props(DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
-    registry.add("spring.datasource.username", POSTGRES::getUsername);
-    registry.add("spring.datasource.password", POSTGRES::getPassword);
-    registry.add("spring.data.redis.host", REDIS::getHost);
-    registry.add("spring.data.redis.port", () -> REDIS.getMappedPort(6379));
-    registry.add("spring.data.redis.password", () -> "");
-  }
+    @DynamicPropertySource
+    static void props(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
+        registry.add("spring.datasource.username", POSTGRES::getUsername);
+        registry.add("spring.datasource.password", POSTGRES::getPassword);
+        registry.add("spring.data.redis.host", REDIS::getHost);
+        registry.add("spring.data.redis.port", () -> REDIS.getMappedPort(6379));
+        registry.add("spring.data.redis.password", () -> "");
+    }
 
-  @Autowired private MockMvc mockMvc;
-  @Autowired private ObjectMapper objectMapper;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
 
-  @Test
-  void loginSuccessThenPing() throws Exception {
-    String token = login("admin", "admin");
-    mockMvc
-        .perform(get("/api/v1/demo/ping").header("Authorization", "Bearer " + token))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.data").value("pong"));
-  }
-
-  @Test
-  void loginWrongPassword() throws Exception {
-    mockMvc
-        .perform(
-            post("/api/v1/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\":\"admin\",\"password\":\"nope\"}"))
-        .andExpect(status().isUnauthorized());
-  }
-
-  @Test
-  void loginValidation() throws Exception {
-    mockMvc
-        .perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content("{}"))
-        .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  void unauthorizedWithoutToken() throws Exception {
-    mockMvc.perform(get("/api/v1/auth/info")).andExpect(status().isUnauthorized());
-  }
-
-  @Test
-  void infoDoesNotEchoToken() throws Exception {
-    String token = login("admin", "admin");
-    mockMvc
-        .perform(get("/api/v1/auth/info").header("Authorization", "Bearer " + token))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.data.username").value("admin"))
-        .andExpect(jsonPath("$.data.token").doesNotExist())
-        .andExpect(jsonPath("$.traceId").exists());
-  }
-
-  private String login(String user, String password) throws Exception {
-    MvcResult result =
+    @Test
+    void loginSuccessThenPing() throws Exception {
+        String token = login("admin", "admin");
         mockMvc
-            .perform(
-                post("/api/v1/auth/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"username\":\"" + user + "\",\"password\":\"" + password + "\"}"))
-            .andExpect(status().isOk())
-            .andReturn();
-    JsonNode node = objectMapper.readTree(result.getResponse().getContentAsString());
-    return node.get("data").get("tokenValue").asText();
-  }
+                .perform(get("/api/v1/demo/ping").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").value("pong"));
+    }
+
+    @Test
+    void loginWrongPassword() throws Exception {
+        mockMvc
+                .perform(
+                        post("/api/v1/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"username\":\"admin\",\"password\":\"nope\"}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void loginValidation() throws Exception {
+        mockMvc
+                .perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void unauthorizedWithoutToken() throws Exception {
+        mockMvc.perform(get("/api/v1/auth/info")).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void infoDoesNotEchoToken() throws Exception {
+        String token = login("admin", "admin");
+        mockMvc
+                .perform(get("/api/v1/auth/info").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.username").value("admin"))
+                .andExpect(jsonPath("$.data.token").doesNotExist())
+                .andExpect(jsonPath("$.traceId").exists());
+    }
+
+    private String login(String user, String password) throws Exception {
+        MvcResult result =
+                mockMvc
+                        .perform(
+                                post("/api/v1/auth/login")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content("{\"username\":\"" + user + "\",\"password\":\"" + password + "\"}"))
+                        .andExpect(status().isOk())
+                        .andReturn();
+        JsonNode node = objectMapper.readTree(result.getResponse().getContentAsString());
+        return node.get("data").get("tokenValue").asText();
+    }
 }

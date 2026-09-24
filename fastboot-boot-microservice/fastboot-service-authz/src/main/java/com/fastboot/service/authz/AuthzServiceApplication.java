@@ -10,15 +10,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2026-09-19
  */
 @SpringBootApplication(
-    scanBasePackages = {
-      "com.fastboot.service.authz",
-      "com.fastboot.modules.authz",
-      "com.fastboot.ddd.infrastructure",
-      "com.fastboot.ddd.interfaces",
-      "com.fastboot.cloud"
-    })
+        scanBasePackages = {
+            "com.fastboot.service.authz",
+            "com.fastboot.modules.authz",
+            "com.fastboot.ddd.infrastructure",
+            "com.fastboot.ddd.interfaces",
+            "com.fastboot.cloud"
+        })
 public class AuthzServiceApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(AuthzServiceApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(AuthzServiceApplication.class, args);
+    }
 }

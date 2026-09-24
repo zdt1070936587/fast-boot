@@ -12,17 +12,17 @@ import java.util.List;
  */
 public record PageData<T>(List<T> items, long total, long page, long size) {
 
-  /**
-   * 构造分页结果。
-   *
-   * @param items 当前页数据
-   * @param total 总记录数
-   * @param page 页码
-   * @param size 每页大小
-   * @param <T> 元素类型
-   * @return 分页对象
-   */
-  public static <T> PageData<T> of(List<T> items, long total, long page, long size) {
-    return new PageData<>(items, total, page, size);
-  }
+    /**
+     * 构造分页结果。
+     *
+     * @param items 当前页数据
+     * @param total 总记录数
+     * @param page 页码
+     * @param size 每页大小
+     * @param <T> 元素类型
+     * @return 分页对象
+     */
+    public static <T> PageData<T> of(List<T> items, long total, long page, long size) {
+        return new PageData<>(items, total, page, size);
+    }
 }

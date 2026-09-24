@@ -16,54 +16,54 @@ import java.time.OffsetDateTime;
  */
 @TableName("sys_role")
 public class SysRoleEntity {
-  /** 主键 ID */
-  @TableId(type = IdType.AUTO)
-  private Long id;
+    /** 主键 ID */
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
-  /** 角色编码 */
-  private String code;
-  /** 角色名称 */
-  private String name;
-  /** 乐观锁版本号 */
-  @Version private Long version;
+    /** 角色编码 */
+    private String code;
+    /** 角色名称 */
+    private String name;
+    /** 乐观锁版本号 */
+    @Version private Long version;
 
-  /** 创建时间 */
-  @TableField(fill = FieldFill.INSERT)
-  private OffsetDateTime createdAt;
+    /** 创建时间 */
+    @TableField(fill = FieldFill.INSERT)
+    private OffsetDateTime createdAt;
 
-  /** 更新时间 */
-  @TableField(fill = FieldFill.INSERT_UPDATE)
-  private OffsetDateTime updatedAt;
+    /** 更新时间 */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private OffsetDateTime updatedAt;
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getCode() {
-    return code;
-  }
+    public String getCode() {
+        return code;
+    }
 
-  public void setCode(String code) {
-    this.code = code;
-  }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public Long getVersion() {
-    return version;
-  }
+    public Long getVersion() {
+        return version;
+    }
 
-  public void setVersion(Long version) {
-    this.version = version;
-  }
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 }

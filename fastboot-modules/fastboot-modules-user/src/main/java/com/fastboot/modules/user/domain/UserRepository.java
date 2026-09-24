@@ -9,11 +9,11 @@ import java.util.Optional;
  * @since 2026-09-19
  */
 public interface UserRepository {
-  Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
-  Optional<User> findById(Long id);
+    Optional<User> findById(Long id);
 
-  void updatePasswordHash(Long id, String passwordHash);
+    void updatePasswordHash(Long id, String passwordHash);
 
-  void updateOrgUnit(Long id, Long orgUnitId);
+    void updateOrgUnit(Long id, Long orgUnitId);
 }

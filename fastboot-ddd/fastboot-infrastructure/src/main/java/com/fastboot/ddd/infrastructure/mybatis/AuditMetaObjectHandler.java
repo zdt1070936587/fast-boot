@@ -14,17 +14,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuditMetaObjectHandler implements MetaObjectHandler {
 
-  /** 插入时填充创建与更新时间 */
-  @Override
-  public void insertFill(MetaObject metaObject) {
-    OffsetDateTime now = OffsetDateTime.now();
-    strictInsertFill(metaObject, "createdAt", OffsetDateTime.class, now);
-    strictInsertFill(metaObject, "updatedAt", OffsetDateTime.class, now);
-  }
+    /** 插入时填充创建与更新时间 */
+    @Override
+    public void insertFill(MetaObject metaObject) {
+        OffsetDateTime now = OffsetDateTime.now();
+        strictInsertFill(metaObject, "createdAt", OffsetDateTime.class, now);
+        strictInsertFill(metaObject, "updatedAt", OffsetDateTime.class, now);
+    }
 
-  /** 更新时刷新更新时间 */
-  @Override
-  public void updateFill(MetaObject metaObject) {
-    strictUpdateFill(metaObject, "updatedAt", OffsetDateTime.class, OffsetDateTime.now());
-  }
+    /** 更新时刷新更新时间 */
+    @Override
+    public void updateFill(MetaObject metaObject) {
+        strictUpdateFill(metaObject, "updatedAt", OffsetDateTime.class, OffsetDateTime.now());
+    }
 }

@@ -15,8 +15,8 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUserEntity> {
 
-  default Optional<SysUserEntity> findByUsername(String username) {
-    return Optional.ofNullable(
-        selectOne(Wrappers.<SysUserEntity>lambdaQuery().eq(SysUserEntity::getUsername, username)));
-  }
+    default Optional<SysUserEntity> findByUsername(String username) {
+        return Optional.ofNullable(
+                selectOne(Wrappers.<SysUserEntity>lambdaQuery().eq(SysUserEntity::getUsername, username)));
+    }
 }

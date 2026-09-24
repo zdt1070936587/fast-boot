@@ -13,20 +13,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class BcryptPasswordHasher implements PasswordHasher {
 
-  /** Spring Security 密码编码器 */
-  private final PasswordEncoder passwordEncoder;
+    /** Spring Security 密码编码器 */
+    private final PasswordEncoder passwordEncoder;
 
-  public BcryptPasswordHasher(PasswordEncoder passwordEncoder) {
-    this.passwordEncoder = passwordEncoder;
-  }
+    public BcryptPasswordHasher(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
-  @Override
-  public boolean matches(String raw, String hash) {
-    return passwordEncoder.matches(raw, hash);
-  }
+    @Override
+    public boolean matches(String raw, String hash) {
+        return passwordEncoder.matches(raw, hash);
+    }
 
-  @Override
-  public String hash(String raw) {
-    return passwordEncoder.encode(raw);
-  }
+    @Override
+    public String hash(String raw) {
+        return passwordEncoder.encode(raw);
+    }
 }
