@@ -1,21 +1,21 @@
 services:
-    monolith:
-        build:
-            context: ./fastboot-boot-monolith
-            dockerfile: Dockerfile
-        environment:
-            SPRING_PROFILES_ACTIVE: local
-            POSTGRES_HOST: postgres
-            POSTGRES_PASSWORD: fastboot
-            POSTGRES_USER: fastboot
-            REDIS_HOST: redis
-            REDIS_PASSWORD: fastboot
-            FASTBOOT_ADMIN_PASSWORD: admin
-        ports:
-            - "8080:8080"
-            - "8081:8081"
-        depends_on:
-            postgres:
-                condition: service_healthy
-            redis:
-                condition: service_healthy
+  monolith:
+    build:
+      context: ./fastboot-boot-monolith
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      POSTGRES_HOST: postgres
+      POSTGRES_PASSWORD: fastboot
+      POSTGRES_USER: fastboot
+      REDIS_HOST: redis
+      REDIS_PASSWORD: fastboot
+      FASTBOOT_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy

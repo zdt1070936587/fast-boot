@@ -1,22 +1,22 @@
 spring:
-    datasource:
-        username: fastboot
-        password: fastboot
-    data:
-        redis:
-            password:
+  datasource:
+    username: fastboot
+    password: fastboot
+  data:
+    redis:
+      password:
 
 management:
-    server:
-        port: 0
-    endpoints:
-        web:
-            exposure:
-                include: health
+  server:
+    port: 0
+  endpoints:
+    web:
+      exposure:
+        include: health
 
 fastboot:
-    security:
-        permit-docs: false
-    admin:
-        bootstrap: true
-        password: admin
+  security:
+    permit-docs: false
+  admin:
+    bootstrap: true
+    password: admin

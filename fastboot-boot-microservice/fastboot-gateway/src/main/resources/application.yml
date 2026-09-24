@@ -1,49 +1,49 @@
 server:
-    port: 18888
+  port: 18888
 
 spring:
-    application:
-        name: fastboot-gateway
-    data:
-        redis:
-            host: ${REDIS_HOST:localhost}
-            port: ${REDIS_PORT:6379}
-            password: ${REDIS_PASSWORD:fastboot}
-    cloud:
-        gateway:
-            httpclient:
-                connect-timeout: 3000
-                response-timeout: 10s
-            default-filters:
-                - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            globalcors:
-                cors-configurations:
-                    '[/**]':
-                        allowedOriginPatterns: "*"
-                        allowedMethods: "*"
-                        allowedHeaders: "*"
-            routes:
-                - id: fb-user
-                    uri: ${USER_SERVICE_URI:http://127.0.0.1:18081}
-                    predicates:
-                        - Path=/api/v1/auth/**,/api/v1/demo/**,/api/v1/users/**
-                - id: fb-authz
-                    uri: ${AUTHZ_SERVICE_URI:http://127.0.0.1:18082}
-                    predicates:
-                        - Path=/api/v1/authz/**
-                - id: fb-org
-                    uri: ${ORG_SERVICE_URI:http://127.0.0.1:18083}
-                    predicates:
-                        - Path=/api/v1/org/**
-                - id: fb-docs-user
-                    uri: ${USER_SERVICE_URI:http://127.0.0.1:18081}
-                    predicates:
-                        - Path=/v3/api-docs/**,/swagger-ui/**,/swagger-ui.html
+  application:
+    name: fastboot-gateway
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:fastboot}
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 3000
+        response-timeout: 10s
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: fb-user
+          uri: ${USER_SERVICE_URI:http://127.0.0.1:18081}
+          predicates:
+            - Path=/api/v1/auth/**,/api/v1/demo/**,/api/v1/users/**
+        - id: fb-authz
+          uri: ${AUTHZ_SERVICE_URI:http://127.0.0.1:18082}
+          predicates:
+            - Path=/api/v1/authz/**
+        - id: fb-org
+          uri: ${ORG_SERVICE_URI:http://127.0.0.1:18083}
+          predicates:
+            - Path=/api/v1/org/**
+        - id: fb-docs-user
+          uri: ${USER_SERVICE_URI:http://127.0.0.1:18081}
+          predicates:
+            - Path=/v3/api-docs/**,/swagger-ui/**,/swagger-ui.html
 
 # Switch to discovery: USER_SERVICE_URI=lb://fastboot-user-service (requires Nacos + LoadBalancer)
 
 management:
-    endpoints:
-        web:
-            exposure:
-                include: health,info
+  endpoints:
+    web:
+      exposure:
+        include: health,info
