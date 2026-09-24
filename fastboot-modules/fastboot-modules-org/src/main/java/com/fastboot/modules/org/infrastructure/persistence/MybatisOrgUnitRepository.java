@@ -1,10 +1,13 @@
 package com.fastboot.modules.org.infrastructure.persistence;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fastboot.common.error.BizException;
+import com.fastboot.common.error.ErrorCode;
 import com.fastboot.modules.org.domain.OrgUnit;
 import com.fastboot.modules.org.domain.OrgUnitRepository;
 import com.fastboot.modules.org.infrastructure.mapper.SysOrgUnitMapper;
 import com.fastboot.modules.org.infrastructure.persistence.entity.SysOrgUnitEntity;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
@@ -31,8 +34,16 @@ public class MybatisOrgUnitRepository implements OrgUnitRepository {
         if (entity.getId() == null) {
             mapper.insert(entity);
             unit.setId(entity.getId());
-        } else {
-            mapper.updateById(entity);
+            unit.setVersion(entity.getVersion());
+            return unit;
+        }
+        int updated = mapper.updateById(entity);
+        if (updated == 0) {
+            throw new BizException(ErrorCode.CONFLICT, "数据已被修改");
+        }
+        SysOrgUnitEntity fresh = mapper.selectById(entity.getId());
+        if (fresh != null) {
+            unit.setVersion(fresh.getVersion());
         }
         return unit;
     }
@@ -48,13 +59,20 @@ public class MybatisOrgUnitRepository implements OrgUnitRepository {
     }
 
     @Override
-    public List<OrgUnit> findByPathPrefix(String pathPrefix) {
+    public List<OrgUnit> findByIds(Collection<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
         return mapper
-                .selectList(
-                        Wrappers.<SysOrgUnitEntity>lambdaQuery().likeRight(SysOrgUnitEntity::getPath, pathPrefix))
+                .selectList(Wrappers.<SysOrgUnitEntity>lambdaQuery().in(SysOrgUnitEntity::getId, ids))
                 .stream()
                 .map(this::toDomain)
                 .toList();
+    }
+
+    @Override
+    public int rebaseSubtreePath(String oldPrefix, String newPrefix, Long selfId) {
+        return mapper.rebaseSubtreePath(oldPrefix, newPrefix, selfId);
     }
 
     @Override

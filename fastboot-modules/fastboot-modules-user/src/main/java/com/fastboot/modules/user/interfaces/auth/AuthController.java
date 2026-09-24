@@ -54,11 +54,8 @@ public class AuthController {
                 new AuthInfoResponse(user.getId(), user.getUsername(), user.getDisplayName(), user.getOrgUnitId()));
     }
 
+    /** 仅使用容器解析后的远端地址；受信代理需配置 server.forward-headers-strategy */
     private static String clientIp(HttpServletRequest request) {
-        String forwarded = request.getHeader("X-Forwarded-For");
-        if (forwarded != null && !forwarded.isBlank()) {
-            return forwarded.split(",")[0].trim();
-        }
         return request.getRemoteAddr() == null ? "unknown" : request.getRemoteAddr();
     }
 }

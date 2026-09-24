@@ -17,6 +17,10 @@
     <dependencies>
         <dependency>
             <groupId>com.fastboot</groupId>
+            <artifactId>fastboot-modules-authz-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fastboot</groupId>
             <artifactId>fastboot-domain</artifactId>
         </dependency>
         <dependency>
@@ -30,6 +34,16 @@
         <dependency>
             <groupId>com.fastboot</groupId>
             <artifactId>fastboot-interfaces</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

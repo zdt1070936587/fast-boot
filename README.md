@@ -85,8 +85,9 @@ HTTP 示例见 `http/api.http`。
 | `fastboot-dependencies` | 唯一第三方/内部版本 BOM |
 | `fastboot-common` | `R`、错误码、锁/审计/幂等注解 |
 | `fastboot-ddd/*` | 内核：聚合基类、MyBatis、Web 异常与 TraceId |
+| `fastboot-modules-authz-api` | 授权契约端口（`PermissionQueryPort` / `DataScopePort`） |
 | `fastboot-modules-user` | 认证与用户 |
-| `fastboot-modules-authz` | 角色/权限/菜单与权限查询端口 |
+| `fastboot-modules-authz` | 角色/权限/菜单与权限查询实现 |
 | `fastboot-modules-org` | 组织树与数据范围过滤 |
 | `fastboot-boot-monolith` | 默认启动器 |
 | `fastboot-boot-microservice/*` | 实验性拆分 |

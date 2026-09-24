@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -35,7 +36,7 @@ public class GlobalExceptionHandler {
         log.warn("biz error code={} msg={}", ex.getCode(), ex.getMessage());
         HttpStatus status = HttpStatus.resolve(ex.getHttpStatus());
         if (status == null) {
-            status = HttpStatus.OK;
+            status = HttpStatus.BAD_REQUEST;
         }
         return ResponseEntity.status(status).body(R.fail(ex.getCode(), ex.getMessage()));
     }
@@ -82,6 +83,14 @@ public class GlobalExceptionHandler {
         log.warn("bad request body: {}", ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(R.fail(ErrorCode.VALIDATION_FAILED.code(), "请求体无法解析"));
+    }
+
+    /** 处理数据库完整性约束冲突 */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<R<Void>> handleDataIntegrity(DataIntegrityViolationException ex) {
+        log.warn("data integrity: {}", ex.getMostSpecificCause().getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(R.fail(ErrorCode.CONFLICT.code(), ErrorCode.CONFLICT.message()));
     }
 
     /** 处理 404 无路由 */

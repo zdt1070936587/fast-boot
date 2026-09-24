@@ -15,6 +15,7 @@
     <name>fastboot-modules</name>
 
     <modules>
+        <module>fastboot-modules-authz-api</module>
         <module>fastboot-modules-authz</module>
         <module>fastboot-modules-user</module>
         <module>fastboot-modules-org</module>

@@ -3,10 +3,10 @@ package com.fastboot.modules.org.application;
 import com.fastboot.common.error.BizException;
 import com.fastboot.common.error.ErrorCode;
 import com.fastboot.common.lock.DistributedLock;
-import com.fastboot.modules.authz.application.AuthzAppService;
+import com.fastboot.modules.authz.api.DataScopePort;
+import com.fastboot.modules.org.application.dto.OrgView;
 import com.fastboot.modules.org.domain.OrgUnit;
 import com.fastboot.modules.org.domain.OrgUnitRepository;
-import com.fastboot.modules.org.interfaces.dto.OrgView;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +22,12 @@ public class OrgAppService {
 
     /** 组织单元仓储 */
     private final OrgUnitRepository orgUnitRepository;
-    /** 授权服务（数据范围过滤） */
-    private final AuthzAppService authzAppService;
+    /** 数据范围端口 */
+    private final DataScopePort dataScopePort;
 
-    public OrgAppService(OrgUnitRepository orgUnitRepository, AuthzAppService authzAppService) {
+    public OrgAppService(OrgUnitRepository orgUnitRepository, DataScopePort dataScopePort) {
         this.orgUnitRepository = orgUnitRepository;
-        this.authzAppService = authzAppService;
+        this.dataScopePort = dataScopePort;
     }
 
     @Transactional
@@ -59,21 +59,14 @@ public class OrgAppService {
         String oldPath = unit.getPath();
         unit.moveTo(parent);
         orgUnitRepository.save(unit);
-        for (OrgUnit child : orgUnitRepository.findByPathPrefix(oldPath)) {
-            if (child.getId().equals(id)) {
-                continue;
-            }
-                String next = child.getPath().replaceFirst(java.util.regex.Pattern.quote(oldPath), unit.getPath());
-            OrgUnit restored =
-                    OrgUnit.restore(child.getId(), child.getParentId(), child.getName(), next, child.getVersion());
-            orgUnitRepository.save(restored);
-        }
+        orgUnitRepository.rebaseSubtreePath(oldPath, unit.getPath(), id);
     }
 
     public List<OrgView> list(Long userId, Long selfOrgId) {
-        List<Long> visible = authzAppService.visibleOrgIds(userId, selfOrgId);
-        return orgUnitRepository.findAll().stream()
-                .filter(unit -> visible.isEmpty() || visible.contains(unit.getId()))
+        List<Long> visible = dataScopePort.visibleOrgIds(userId, selfOrgId);
+        List<OrgUnit> units =
+                visible.isEmpty() ? orgUnitRepository.findAll() : orgUnitRepository.findByIds(visible);
+        return units.stream()
                 .map(unit -> new OrgView(unit.getId(), unit.getParentId(), unit.getName(), unit.getPath()))
                 .toList();
     }

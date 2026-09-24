@@ -5,8 +5,8 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,31 +19,26 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@EnableConfigurationProperties(FastbootSecurityProperties.class)
 public class SaTokenMvcConfiguration implements WebMvcConfigurer {
 
-    /** 是否放行 OpenAPI/Swagger 文档路径 */
-    @Value("${fastboot.security.permit-docs:false}")
-    private boolean permitDocs;
+    private final FastbootSecurityProperties securityProperties;
 
-    /** 是否放行内部 API 路径 */
-    @Value("${fastboot.security.permit-internal:false}")
-    private boolean permitInternal;
+    public SaTokenMvcConfiguration(FastbootSecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
+    }
 
     /** 注册 Sa-Token 拦截器及排除路径 */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        List<String> excludes = new ArrayList<>();
-        excludes.add("/api/v1/auth/login");
-        excludes.add("/error");
-        excludes.add("/actuator");
-        excludes.add("/actuator/**");
-        if (permitDocs) {
+        List<String> excludes = new ArrayList<>(securityProperties.getPermitPaths());
+        if (securityProperties.isPermitDocs()) {
             excludes.add("/v3/api-docs");
             excludes.add("/v3/api-docs/**");
             excludes.add("/swagger-ui.html");
             excludes.add("/swagger-ui/**");
         }
-        if (permitInternal) {
+        if (securityProperties.isPermitInternal()) {
             excludes.add("/api/v1/internal/**");
         }
         registry

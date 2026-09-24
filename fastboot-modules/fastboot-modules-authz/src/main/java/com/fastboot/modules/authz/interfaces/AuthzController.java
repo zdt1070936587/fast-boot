@@ -1,17 +1,16 @@
 package com.fastboot.modules.authz.interfaces;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import com.fastboot.common.api.PageData;
 import com.fastboot.common.api.R;
 import com.fastboot.modules.authz.application.AuthzAppService;
 import com.fastboot.modules.authz.application.AuthzCatalogService;
+import com.fastboot.modules.authz.application.dto.MenuView;
+import com.fastboot.modules.authz.application.dto.PermissionView;
+import com.fastboot.modules.authz.application.dto.RoleView;
 import com.fastboot.modules.authz.interfaces.dto.IdListRequest;
 import com.fastboot.modules.authz.interfaces.dto.MenuCreateRequest;
-import com.fastboot.modules.authz.interfaces.dto.MenuView;
 import com.fastboot.modules.authz.interfaces.dto.PermissionCreateRequest;
-import com.fastboot.modules.authz.interfaces.dto.PermissionView;
 import com.fastboot.modules.authz.interfaces.dto.RoleCreateRequest;
-import com.fastboot.modules.authz.interfaces.dto.RoleView;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -46,7 +45,7 @@ public class AuthzController {
 
     @GetMapping("/roles")
     @SaCheckPermission("sys:authz:read")
-    public R<PageData<RoleView>> roles() {
+    public R<List<RoleView>> roles() {
         return R.ok(catalogService.listRoles());
     }
 
@@ -58,7 +57,7 @@ public class AuthzController {
 
     @GetMapping("/permissions")
     @SaCheckPermission("sys:authz:read")
-    public R<PageData<PermissionView>> permissions() {
+    public R<List<PermissionView>> permissions() {
         return R.ok(catalogService.listPermissions());
     }
 

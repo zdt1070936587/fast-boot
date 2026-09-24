@@ -131,6 +131,11 @@
             </dependency>
             <dependency>
                 <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-authz-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
                 <artifactId>fastboot-modules-org</artifactId>
                 <version>${project.version}</version>
             </dependency>

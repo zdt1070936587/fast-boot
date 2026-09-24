@@ -1,5 +1,6 @@
 package com.fastboot.modules.org.domain;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,9 @@ public interface OrgUnitRepository {
 
     List<OrgUnit> findAll();
 
-    List<OrgUnit> findByPathPrefix(String pathPrefix);
+    List<OrgUnit> findByIds(Collection<Long> ids);
+
+    int rebaseSubtreePath(String oldPrefix, String newPrefix, Long selfId);
 
     void deleteById(Long id);
 }

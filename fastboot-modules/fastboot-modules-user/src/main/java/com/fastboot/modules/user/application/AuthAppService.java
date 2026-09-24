@@ -4,13 +4,13 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.fastboot.common.audit.OperationLog;
 import com.fastboot.common.error.BizException;
 import com.fastboot.common.error.ErrorCode;
+import com.fastboot.ddd.domain.event.DomainEventPublisher;
 import com.fastboot.modules.authz.api.PermissionQueryPort;
 import com.fastboot.modules.user.domain.PasswordHasher;
 import com.fastboot.modules.user.domain.User;
 import com.fastboot.modules.user.domain.UserRepository;
 import com.fastboot.modules.user.domain.event.UserLoggedIn;
 import com.fastboot.modules.user.domain.event.UserLoggedOut;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,14 +32,14 @@ public class AuthAppService {
     /** 登录防护（限流与失败锁定） */
     private final LoginGuard loginGuard;
     /** 领域事件发布器 */
-    private final ApplicationEventPublisher events;
+    private final DomainEventPublisher events;
 
     public AuthAppService(
             UserRepository userRepository,
             PasswordHasher passwordHasher,
             PermissionQueryPort permissionQueryPort,
             LoginGuard loginGuard,
-            ApplicationEventPublisher events) {
+            DomainEventPublisher events) {
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
         this.permissionQueryPort = permissionQueryPort;
@@ -47,8 +47,7 @@ public class AuthAppService {
         this.events = events;
     }
 
-    @Transactional(readOnly = true)
-    @OperationLog("login")
+    @OperationLog(value = "login", args = {"#username", "#clientIp"})
     public String login(String username, String password, String clientIp) {
         loginGuard.assertAllowed(username, clientIp);
         try {
@@ -58,8 +57,9 @@ public class AuthAppService {
                             .orElseThrow(() -> new BizException(ErrorCode.USER_OR_PASSWORD));
             user.assertCanLogin(password, passwordHasher);
             StpUtil.login(user.getId());
+            StpUtil.getSession().set("orgUnitId", user.getOrgUnitId());
             permissionQueryPort.evict(user.getId());
-            events.publishEvent(new UserLoggedIn(user.getId(), user.getUsername()));
+            events.publish(new UserLoggedIn(user.getId(), user.getUsername()));
             loginGuard.onSuccess(username);
             return StpUtil.getTokenValue();
         } catch (BizException ex) {
@@ -77,7 +77,7 @@ public class AuthAppService {
             Long id = StpUtil.getLoginIdAsLong();
             StpUtil.logout();
             permissionQueryPort.evict(id);
-            events.publishEvent(new UserLoggedOut(id));
+            events.publish(new UserLoggedOut(id));
         }
     }
 
@@ -91,6 +91,11 @@ public class AuthAppService {
 
     @Transactional
     public void assignOrg(Long userId, Long orgUnitId) {
-        userRepository.updateOrgUnit(userId, orgUnitId);
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND));
+        user.assignOrg(orgUnitId);
+        userRepository.save(user);
     }
 }

@@ -16,4 +16,7 @@ import java.lang.annotation.Target;
 public @interface OperationLog {
     /** 操作名称或业务动作描述 */
     String value();
+
+    /** 要记录的参数 SpEL 表达式，空 = 不记录任何参数（避免密码等敏感字段入日志） */
+    String[] args() default {};
 }

@@ -1,5 +1,6 @@
 server:
-  port: ${SERVER_PORT:8080}
+    port: ${SERVER_PORT:8080}
+    forward-headers-strategy: ${FORWARD_HEADERS_STRATEGY:none}
 
 spring:
   application:
@@ -64,5 +65,6 @@ springdoc:
 fastboot:
   security:
     permit-docs: false
+    permit-internal: false
   admin:
     bootstrap: false

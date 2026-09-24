@@ -4,9 +4,9 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.fastboot.common.api.R;
 import com.fastboot.modules.org.application.OrgAppService;
+import com.fastboot.modules.org.application.dto.OrgView;
 import com.fastboot.modules.org.interfaces.dto.OrgCreateRequest;
 import com.fastboot.modules.org.interfaces.dto.OrgMoveRequest;
-import com.fastboot.modules.org.interfaces.dto.OrgView;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,7 +39,12 @@ public class OrgController {
     @GetMapping
     @SaCheckPermission("sys:org:read")
     public R<List<OrgView>> list() {
-        return R.ok(orgAppService.list(StpUtil.getLoginIdAsLong(), null));
+        Long selfOrgId = null;
+        Object raw = StpUtil.getSession().get("orgUnitId");
+        if (raw instanceof Number number) {
+            selfOrgId = number.longValue();
+        }
+        return R.ok(orgAppService.list(StpUtil.getLoginIdAsLong(), selfOrgId));
     }
 
     @PostMapping

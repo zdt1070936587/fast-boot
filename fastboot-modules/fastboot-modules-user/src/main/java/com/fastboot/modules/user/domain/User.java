@@ -53,6 +53,13 @@ public class User extends AggregateRoot<Long> {
         }
     }
 
+    public void initializePassword(String hash) {
+        if (hasPassword()) {
+            throw new BizException(ErrorCode.CONFLICT, "密码已初始化");
+        }
+        this.passwordHash = hash;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -67,6 +74,10 @@ public class User extends AggregateRoot<Long> {
 
     public boolean hasPassword() {
         return passwordHash != null && !passwordHash.isBlank();
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
     public Long getOrgUnitId() {

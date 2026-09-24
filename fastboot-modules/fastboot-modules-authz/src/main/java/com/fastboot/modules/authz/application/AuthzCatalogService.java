@@ -1,21 +1,18 @@
 package com.fastboot.modules.authz.application;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.fastboot.common.api.PageData;
 import com.fastboot.common.error.BizException;
 import com.fastboot.common.error.ErrorCode;
+import com.fastboot.modules.authz.application.dto.MenuView;
+import com.fastboot.modules.authz.application.dto.PermissionView;
+import com.fastboot.modules.authz.application.dto.RoleView;
 import com.fastboot.modules.authz.infrastructure.mapper.SysMenuMapper;
 import com.fastboot.modules.authz.infrastructure.mapper.SysPermissionMapper;
 import com.fastboot.modules.authz.infrastructure.mapper.SysRoleMapper;
 import com.fastboot.modules.authz.infrastructure.persistence.entity.SysMenuEntity;
 import com.fastboot.modules.authz.infrastructure.persistence.entity.SysPermissionEntity;
 import com.fastboot.modules.authz.infrastructure.persistence.entity.SysRoleEntity;
-import com.fastboot.modules.authz.interfaces.dto.MenuView;
-import com.fastboot.modules.authz.interfaces.dto.PermissionView;
-import com.fastboot.modules.authz.interfaces.dto.RoleView;
-
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,32 +25,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthzCatalogService {
 
-    /**
-     * 角色表映射器
-     */
+    /** 角色表映射器 */
     private final SysRoleMapper roleMapper;
-    /**
-     * 权限点表映射器
-     */
+    /** 权限点表映射器 */
     private final SysPermissionMapper permissionMapper;
-    /**
-     * 菜单表映射器
-     */
+    /** 菜单表映射器 */
     private final SysMenuMapper menuMapper;
 
     public AuthzCatalogService(
-        SysRoleMapper roleMapper, SysPermissionMapper permissionMapper, SysMenuMapper menuMapper) {
+            SysRoleMapper roleMapper, SysPermissionMapper permissionMapper, SysMenuMapper menuMapper) {
         this.roleMapper = roleMapper;
         this.permissionMapper = permissionMapper;
         this.menuMapper = menuMapper;
     }
 
-    public PageData<RoleView> listRoles() {
-        List<RoleView> items =
-            roleMapper.selectList(Wrappers.emptyWrapper()).stream()
+    public List<RoleView> listRoles() {
+        return roleMapper.selectList(Wrappers.emptyWrapper()).stream()
                 .map(r -> new RoleView(r.getId(), r.getCode(), r.getName()))
                 .toList();
-        return PageData.of(items, items.size(), 1, items.size());
     }
 
     @Transactional
@@ -65,12 +54,10 @@ public class AuthzCatalogService {
         return entity.getId();
     }
 
-    public PageData<PermissionView> listPermissions() {
-        List<PermissionView> items =
-            permissionMapper.selectList(Wrappers.emptyWrapper()).stream()
+    public List<PermissionView> listPermissions() {
+        return permissionMapper.selectList(Wrappers.emptyWrapper()).stream()
                 .map(p -> new PermissionView(p.getId(), p.getPermType(), p.getPermCode(), p.getName()))
                 .toList();
-        return PageData.of(items, items.size(), 1, items.size());
     }
 
     @Transactional
@@ -85,16 +72,16 @@ public class AuthzCatalogService {
 
     public List<MenuView> listMenus() {
         return menuMapper.selectList(Wrappers.emptyWrapper()).stream()
-            .map(
-                m ->
-                    new MenuView(
-                        m.getId(),
-                        m.getParentId(),
-                        m.getName(),
-                        m.getPath(),
-                        m.getComponent(),
-                        m.getPermCode()))
-            .toList();
+                .map(
+                        m ->
+                                new MenuView(
+                                        m.getId(),
+                                        m.getParentId(),
+                                        m.getName(),
+                                        m.getPath(),
+                                        m.getComponent(),
+                                        m.getPermCode()))
+                .toList();
     }
 
     @Transactional

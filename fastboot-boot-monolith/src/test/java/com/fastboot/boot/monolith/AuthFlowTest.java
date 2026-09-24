@@ -85,6 +85,11 @@ class AuthFlowTest {
     }
 
     @Test
+    void internalApiHiddenWhenPermitInternalDisabled() throws Exception {
+        mockMvc.perform(get("/api/v1/internal/permissions/1")).andExpect(status().isNotFound());
+    }
+
+    @Test
     void infoDoesNotEchoToken() throws Exception {
         String token = login("admin", "admin");
         mockMvc

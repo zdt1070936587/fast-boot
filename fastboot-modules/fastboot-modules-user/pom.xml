@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>com.fastboot</groupId>
-            <artifactId>fastboot-modules-authz</artifactId>
+            <artifactId>fastboot-modules-authz-api</artifactId>
         </dependency>
         <dependency>
             <groupId>cn.dev33</groupId>
@@ -46,6 +46,11 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

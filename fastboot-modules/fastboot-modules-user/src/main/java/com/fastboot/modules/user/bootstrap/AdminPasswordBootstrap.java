@@ -51,7 +51,8 @@ public class AdminPasswordBootstrap implements ApplicationRunner {
                 .ifPresent(
                         user -> {
                             if (!user.hasPassword()) {
-                                userRepository.updatePasswordHash(user.getId(), passwordHasher.hash(adminPassword));
+                                user.initializePassword(passwordHasher.hash(adminPassword));
+                                userRepository.save(user);
                                 log.warn("local profile: initialized admin password from configuration");
                             }
                         });

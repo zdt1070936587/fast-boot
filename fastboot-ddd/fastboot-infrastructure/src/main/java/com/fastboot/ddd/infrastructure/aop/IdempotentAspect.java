@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Aspect
 @Component
+@Order(100)
 public class IdempotentAspect {
 
     /** Redisson 客户端 */
@@ -28,15 +30,22 @@ public class IdempotentAspect {
         this.redissonClient = redissonClient;
     }
 
-    /** 首次请求写入幂等键并执行业务，重复请求抛出幂等冲突 */
+    /** 首次请求写入幂等键并执行业务，重复请求抛出幂等冲突；业务异常时释放键以便重试 */
     @Around("@annotation(idempotent)")
     public Object around(ProceedingJoinPoint pjp, Idempotent idempotent) throws Throwable {
-        String key = "fb:idem:" + DistributedLockAspect.eval(pjp, idempotent.key());
+        String key = "fb:idem:" + SpelSupport.eval(pjp, idempotent.key());
         RBucket<Boolean> bucket = redissonClient.getBucket(key);
-        boolean first = bucket.setIfAbsent(Boolean.TRUE, Duration.of(idempotent.ttl(), idempotent.unit().toChronoUnit()));
+        boolean first =
+                bucket.setIfAbsent(
+                        Boolean.TRUE, Duration.of(idempotent.ttl(), idempotent.unit().toChronoUnit()));
         if (!first) {
             throw new BizException(ErrorCode.IDEMPOTENT_CONFLICT);
         }
-        return pjp.proceed();
+        try {
+            return pjp.proceed();
+        } catch (Throwable ex) {
+            bucket.delete();
+            throw ex;
+        }
     }
 }

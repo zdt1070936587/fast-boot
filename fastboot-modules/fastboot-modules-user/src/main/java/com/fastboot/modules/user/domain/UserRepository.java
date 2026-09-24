@@ -13,7 +13,5 @@ public interface UserRepository {
 
     Optional<User> findById(Long id);
 
-    void updatePasswordHash(Long id, String passwordHash);
-
-    void updateOrgUnit(Long id, Long orgUnitId);
+    User save(User user);
 }

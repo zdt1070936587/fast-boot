@@ -48,8 +48,19 @@ public class OrgUnit extends AggregateRoot<Long> {
     }
 
     public void moveTo(OrgUnit newParent) {
+        if (newParent == null || newParent.getId() == null) {
+            throw new BizException(ErrorCode.NOT_FOUND, "上级组织不存在");
+        }
+        if (newParent.getId().equals(getId())) {
+            throw new BizException(ErrorCode.CONFLICT, "不能移动到自身或子节点下");
+        }
+        String selfPath = path == null ? "" : path;
+        String parentPath = newParent.getPath() == null ? "" : newParent.getPath();
+        if (!selfPath.isBlank() && parentPath.startsWith(selfPath)) {
+            throw new BizException(ErrorCode.CONFLICT, "不能移动到自身或子节点下");
+        }
         this.parentId = newParent.getId();
-        this.path = newParent.getPath() + getId() + "/";
+        this.path = parentPath + getId() + "/";
     }
 
     public Long getParentId() {

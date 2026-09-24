@@ -1,5 +1,6 @@
 package com.fastboot.ddd.infrastructure.aop;
 
+import com.fastboot.common.api.TraceIdHolder;
 import com.fastboot.common.audit.OperationLog;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link OperationLog} 注解切面，记录操作审计日志。
+ * {@link OperationLog} 注解切面，记录操作审计日志（仅记录显式声明的 SpEL 参数）。
  *
  * @author zhaodt
  * @since 2026-09-19
@@ -24,9 +25,18 @@ public class OperationLogAspect {
     /** 方法正常返回后写入审计日志 */
     @AfterReturning(pointcut = "@annotation(operationLog)", returning = "result")
     public void after(JoinPoint joinPoint, OperationLog operationLog, Object result) {
-        log.info("audit action={} method={} args={}",
+        Object loginId = null;
+        try {
+            loginId = cn.dev33.satoken.stp.StpUtil.getLoginIdDefaultNull();
+        } catch (Throwable ignored) {
+            // Sa-Token 未初始化或非 Web 上下文时忽略
+        }
+        log.info(
+                "audit action={} method={} loginId={} traceId={} args={}",
                 operationLog.value(),
                 joinPoint.getSignature().toShortString(),
-                joinPoint.getArgs());
+                loginId,
+                TraceIdHolder.current(),
+                SpelSupport.evalAll(joinPoint, operationLog.args()));
     }
 }

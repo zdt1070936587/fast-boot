@@ -1,6 +1,7 @@
 package com.fastboot.modules.user.infrastructure.persistence;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fastboot.common.error.BizException;
+import com.fastboot.common.error.ErrorCode;
 import com.fastboot.modules.user.domain.User;
 import com.fastboot.modules.user.domain.UserRepository;
 import com.fastboot.modules.user.infrastructure.mapper.SysUserMapper;
@@ -35,21 +36,23 @@ public class MybatisUserRepository implements UserRepository {
     }
 
     @Override
-    public void updatePasswordHash(Long id, String passwordHash) {
-        sysUserMapper.update(
-                null,
-                Wrappers.<SysUserEntity>lambdaUpdate()
-                        .set(SysUserEntity::getPasswordHash, passwordHash)
-                        .eq(SysUserEntity::getId, id));
-    }
-
-    @Override
-    public void updateOrgUnit(Long id, Long orgUnitId) {
-        sysUserMapper.update(
-                null,
-                Wrappers.<SysUserEntity>lambdaUpdate()
-                        .set(SysUserEntity::getOrgUnitId, orgUnitId)
-                        .eq(SysUserEntity::getId, id));
+    public User save(User user) {
+        SysUserEntity entity = toEntity(user);
+        if (entity.getId() == null) {
+            sysUserMapper.insert(entity);
+            user.setId(entity.getId());
+            user.setVersion(entity.getVersion());
+            return user;
+        }
+        int updated = sysUserMapper.updateById(entity);
+        if (updated == 0) {
+            throw new BizException(ErrorCode.CONFLICT, "数据已被修改");
+        }
+        SysUserEntity fresh = sysUserMapper.selectById(entity.getId());
+        if (fresh != null) {
+            user.setVersion(fresh.getVersion());
+        }
+        return user;
     }
 
     private User toDomain(SysUserEntity entity) {
@@ -61,5 +64,17 @@ public class MybatisUserRepository implements UserRepository {
                 Boolean.TRUE.equals(entity.getEnabled()),
                 entity.getOrgUnitId(),
                 entity.getVersion());
+    }
+
+    private SysUserEntity toEntity(User user) {
+        SysUserEntity entity = new SysUserEntity();
+        entity.setId(user.getId());
+        entity.setUsername(user.getUsername());
+        entity.setDisplayName(user.getDisplayName());
+        entity.setPasswordHash(user.getPasswordHash());
+        entity.setEnabled(user.isEnabled());
+        entity.setOrgUnitId(user.getOrgUnitId());
+        entity.setVersion(user.getVersion());
+        return entity;
     }
 }
