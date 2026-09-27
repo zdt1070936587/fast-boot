@@ -16,12 +16,29 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.fastboot</groupId>
+            <artifactId>fastboot-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fastboot</groupId>
+            <artifactId>fastboot-modules-authz-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fastboot</groupId>
+            <artifactId>fastboot-modules-system-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

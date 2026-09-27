@@ -7,6 +7,7 @@ import com.fastboot.modules.authz.api.DataScopePort;
 import com.fastboot.modules.org.application.dto.OrgView;
 import com.fastboot.modules.org.domain.OrgUnit;
 import com.fastboot.modules.org.domain.OrgUnitRepository;
+import com.fastboot.starter.datapermission.DataPermission;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +63,7 @@ public class OrgAppService {
         orgUnitRepository.rebaseSubtreePath(oldPath, unit.getPath(), id);
     }
 
+    @DataPermission
     public List<OrgView> list(Long userId, Long selfOrgId) {
         List<Long> visible = dataScopePort.visibleOrgIds(userId, selfOrgId);
         List<OrgUnit> units =
@@ -69,5 +71,29 @@ public class OrgAppService {
         return units.stream()
                 .map(unit -> new OrgView(unit.getId(), unit.getParentId(), unit.getName(), unit.getPath()))
                 .toList();
+    }
+
+    @Transactional
+    public void update(Long id, String name) {
+        OrgUnit unit =
+                orgUnitRepository.findById(id).orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND));
+        unit.rename(name);
+        orgUnitRepository.save(unit);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        OrgUnit unit =
+                orgUnitRepository.findById(id).orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND));
+        String prefix = unit.getPath() == null ? "" : unit.getPath();
+        long children =
+                orgUnitRepository.findAll().stream()
+                        .filter(other -> !other.getId().equals(id))
+                        .filter(other -> other.getPath() != null && other.getPath().startsWith(prefix))
+                        .count();
+        if (children > 0) {
+            throw new BizException(ErrorCode.CONFLICT, "存在下级组织，无法删除");
+        }
+        orgUnitRepository.deleteById(id);
     }
 }

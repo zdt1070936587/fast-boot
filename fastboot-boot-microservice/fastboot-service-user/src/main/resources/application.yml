@@ -9,9 +9,9 @@ spring:
         virtual:
             enabled: true
     datasource:
-        url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:fastboot}
-        username: ${POSTGRES_USER:fastboot}
-        password: ${POSTGRES_PASSWORD:fastboot}
+        url: jdbc:postgresql://${POSTGRES_HOST:127.0.0.1}:${POSTGRES_PORT:15432}/${POSTGRES_DB:fastboot}
+        username: ${POSTGRES_USER:dafu}
+        password: ${POSTGRES_PASSWORD:123456}
     flyway:
         enabled: true
         locations: classpath:db/migration

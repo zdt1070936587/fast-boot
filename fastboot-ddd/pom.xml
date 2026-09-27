@@ -16,7 +16,6 @@
 
     <modules>
         <module>fastboot-domain</module>
-        <module>fastboot-application</module>
         <module>fastboot-infrastructure</module>
         <module>fastboot-interfaces</module>
     </modules>

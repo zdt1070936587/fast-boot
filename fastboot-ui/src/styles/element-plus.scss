@@ -1,0 +1,426 @@
+// Element Plus 主题覆盖：基于 CSS 变量，配合 element-plus/dist/index.css 使用
+// 目标：更大的圆角、更淡的边框、更轻的阴影，与 FastBoot 设计 token 对齐
+
+:root {
+  --el-font-family: var(--fb-font);
+  --el-font-size-base: 14px;
+
+  --el-color-primary: var(--fb-primary);
+  --el-color-primary-light-3: #4ade80;
+  --el-color-primary-light-5: #86efac;
+  --el-color-primary-light-7: #bbf7d0;
+  --el-color-primary-light-8: #dcfce7;
+  --el-color-primary-light-9: #f0fdf4;
+  --el-color-primary-dark-2: var(--fb-primary-strong);
+
+  --el-color-success: var(--fb-success);
+  --el-color-warning: var(--fb-warning);
+  --el-color-danger: var(--fb-danger);
+  --el-color-error: var(--fb-danger);
+  --el-color-info: var(--fb-info);
+
+  --el-text-color-primary: var(--fb-text);
+  --el-text-color-regular: var(--fb-text-2);
+  --el-text-color-secondary: var(--fb-muted);
+  --el-text-color-placeholder: var(--fb-muted);
+
+  --el-border-color: rgba(15, 23, 42, 0.1);
+  --el-border-color-light: var(--fb-border);
+  --el-border-color-lighter: var(--fb-border);
+  --el-border-color-extra-light: var(--fb-border);
+  --el-border-color-hover: var(--fb-border-strong);
+
+  --el-fill-color: var(--fb-surface-3);
+  --el-fill-color-light: var(--fb-surface-2);
+  --el-fill-color-lighter: var(--fb-surface-2);
+  --el-fill-color-blank: var(--fb-surface);
+
+  --el-bg-color: var(--fb-surface);
+  --el-bg-color-page: var(--fb-bg);
+  --el-bg-color-overlay: var(--fb-surface);
+
+  --el-border-radius-base: 10px;
+  --el-border-radius-small: 8px;
+  --el-border-radius-round: 999px;
+
+  --el-box-shadow: var(--fb-shadow);
+  --el-box-shadow-light: var(--fb-shadow-sm);
+  --el-box-shadow-lighter: var(--fb-shadow-xs);
+  --el-box-shadow-dark: var(--fb-shadow-lg);
+
+  --el-mask-color: rgba(15, 23, 42, 0.32);
+}
+
+// ---------- Button ----------
+.el-button {
+  --el-button-border-color: var(--fb-border-strong);
+  --el-button-hover-border-color: var(--fb-border-strong);
+  --el-button-hover-bg-color: var(--fb-surface-2);
+  --el-button-hover-text-color: var(--fb-text);
+  border-radius: 10px;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 16px;
+  transition: all var(--fb-dur) var(--fb-ease);
+
+  &.is-round {
+    border-radius: var(--fb-radius-pill);
+  }
+
+  &.is-circle {
+    padding: 0;
+    width: 36px;
+  }
+
+  &--small {
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 8px;
+
+    &.is-circle {
+      width: 30px;
+    }
+  }
+
+  &--large {
+    height: 44px;
+    padding: 0 22px;
+    border-radius: 12px;
+  }
+
+  &--primary {
+    --el-button-bg-color: var(--fb-ink);
+    --el-button-border-color: var(--fb-ink);
+    --el-button-hover-bg-color: #000;
+    --el-button-hover-border-color: #000;
+    --el-button-active-bg-color: #000;
+    --el-button-active-border-color: #000;
+    --el-button-text-color: #fff;
+    --el-button-hover-text-color: #fff;
+    box-shadow: 0 8px 20px -10px rgba(17, 24, 39, 0.55);
+
+    &.is-disabled,
+    &.is-disabled:hover {
+      --el-button-disabled-bg-color: #cbd5e1;
+      --el-button-disabled-border-color: #cbd5e1;
+      --el-button-disabled-text-color: #fff;
+      box-shadow: none;
+    }
+
+    &.is-plain,
+    &.is-text,
+    &.is-link {
+      --el-button-bg-color: var(--fb-primary-tint);
+      --el-button-border-color: var(--fb-primary-soft);
+      --el-button-text-color: var(--fb-primary-strong);
+      --el-button-hover-bg-color: var(--fb-primary-soft);
+      --el-button-hover-border-color: var(--fb-primary);
+      --el-button-hover-text-color: var(--fb-primary-strong);
+      box-shadow: none;
+    }
+
+    &.is-text,
+    &.is-link {
+      --el-button-bg-color: transparent;
+      --el-button-border-color: transparent;
+    }
+  }
+
+  &--success {
+    --el-button-bg-color: var(--fb-primary);
+    --el-button-border-color: var(--fb-primary);
+    --el-button-hover-bg-color: var(--fb-primary-strong);
+    --el-button-hover-border-color: var(--fb-primary-strong);
+    box-shadow: 0 8px 20px -10px rgba(34, 197, 94, 0.6);
+  }
+
+  &--danger.is-plain {
+    --el-button-bg-color: var(--fb-danger-soft);
+    --el-button-border-color: transparent;
+  }
+
+  &.is-text {
+    height: 32px;
+    padding: 0 10px;
+  }
+}
+
+// ---------- Input / Select ----------
+.el-input,
+.el-textarea {
+  --el-input-border-radius: 10px;
+  --el-input-bg-color: var(--fb-surface);
+  --el-input-border-color: var(--fb-border-strong);
+  --el-input-hover-border-color: rgba(15, 23, 42, 0.24);
+  --el-input-focus-border-color: var(--fb-ink);
+}
+
+.el-input__wrapper,
+.el-textarea__inner {
+  box-shadow: 0 0 0 1px var(--el-input-border-color) inset;
+  transition: box-shadow var(--fb-dur) var(--fb-ease);
+}
+
+.el-input--large .el-input__wrapper {
+  border-radius: 12px;
+}
+
+.el-input__wrapper.is-focus,
+.el-textarea__inner:focus {
+  box-shadow: 0 0 0 1.5px var(--fb-ink) inset;
+}
+
+.el-select__wrapper {
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--fb-border-strong) inset;
+
+  &.is-focused {
+    box-shadow: 0 0 0 1.5px var(--fb-ink) inset;
+  }
+}
+
+.el-form-item__label {
+  font-weight: 500;
+  color: var(--fb-text-2);
+  font-size: 13px;
+}
+
+// ---------- Table ----------
+.el-table {
+  --el-table-border-color: var(--fb-border);
+  --el-table-header-bg-color: transparent;
+  --el-table-header-text-color: var(--fb-muted);
+  --el-table-row-hover-bg-color: var(--fb-surface-2);
+  --el-table-text-color: var(--fb-text-2);
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-fixed-box-shadow: none;
+  font-size: 13.5px;
+
+  th.el-table__cell {
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding: 10px 0;
+    background: transparent;
+  }
+
+  td.el-table__cell {
+    padding: 13px 0;
+    color: var(--fb-text-2);
+  }
+
+  .cell {
+    padding: 0 14px;
+    line-height: 1.5;
+  }
+
+  &--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+    background: var(--fb-surface-2);
+  }
+
+  .el-table__inner-wrapper::before {
+    display: none;
+  }
+
+  .el-table__empty-block {
+    min-height: 180px;
+  }
+}
+
+// ---------- Tag ----------
+.el-tag {
+  --el-tag-border-radius: 999px;
+  border: none;
+  font-weight: 500;
+  height: 24px;
+  padding: 0 10px;
+
+  &--success {
+    --el-tag-bg-color: var(--fb-primary-soft);
+    --el-tag-text-color: var(--fb-primary-strong);
+  }
+
+  &--info {
+    --el-tag-bg-color: var(--fb-surface-3);
+    --el-tag-text-color: var(--fb-text-2);
+  }
+
+  &--warning {
+    --el-tag-bg-color: var(--fb-warning-soft);
+    --el-tag-text-color: #b45309;
+  }
+
+  &--danger {
+    --el-tag-bg-color: var(--fb-danger-soft);
+    --el-tag-text-color: #b91c1c;
+  }
+}
+
+// ---------- Overlay 类 ----------
+.el-card {
+  border-radius: var(--fb-radius-lg);
+  box-shadow: var(--fb-shadow-sm);
+  border-color: var(--fb-border);
+}
+
+.el-dialog {
+  border-radius: var(--fb-radius-lg);
+  box-shadow: var(--fb-shadow-lg);
+  padding: 24px 26px;
+
+  .el-dialog__title {
+    font-weight: 600;
+    font-size: 16px;
+  }
+}
+
+.el-drawer {
+  border-radius: var(--fb-radius-lg) 0 0 var(--fb-radius-lg);
+  box-shadow: var(--fb-shadow-lg);
+
+  .el-drawer__header {
+    margin-bottom: 0;
+    padding: 20px 22px 14px;
+    color: var(--fb-text);
+    font-weight: 600;
+  }
+
+  .el-drawer__body {
+    padding: 8px 22px 22px;
+  }
+}
+
+.el-popper.is-light {
+  border-radius: 14px;
+  border-color: var(--fb-border);
+  box-shadow: var(--fb-shadow);
+}
+
+.el-dropdown-menu {
+  padding: 6px;
+  border-radius: 14px;
+
+  &__item {
+    border-radius: 9px;
+    padding: 8px 12px;
+    font-size: 13px;
+    line-height: 1.3;
+
+    &:not(.is-disabled):hover,
+    &:not(.is-disabled):focus {
+      background: var(--fb-surface-3);
+      color: var(--fb-text);
+    }
+  }
+}
+
+.el-dropdown-menu__item--divided {
+  margin-top: 6px;
+  border-top-color: var(--fb-border);
+}
+
+.el-select-dropdown__item {
+  border-radius: 8px;
+  margin: 0 6px;
+  padding: 0 12px;
+
+  &.is-selected {
+    color: var(--fb-text);
+    font-weight: 600;
+  }
+
+  &.is-hovering {
+    background: var(--fb-surface-3);
+  }
+}
+
+.el-message {
+  border-radius: 12px;
+  border: 1px solid var(--fb-border);
+  box-shadow: var(--fb-shadow);
+}
+
+.el-alert {
+  border-radius: 12px;
+}
+
+.el-descriptions {
+  --el-descriptions-item-bordered-label-background: var(--fb-surface-2);
+
+  .el-descriptions__label {
+    color: var(--fb-muted);
+    font-weight: 500;
+  }
+
+  .el-descriptions__body {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--fb-border);
+  }
+
+  .el-descriptions__table.is-bordered .el-descriptions__cell {
+    border-color: var(--fb-border);
+  }
+}
+
+.el-pagination {
+  --el-pagination-button-bg-color: transparent;
+  --el-pagination-hover-color: var(--fb-text);
+  font-weight: 500;
+
+  .el-pager li {
+    border-radius: 9px;
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  &.is-background .el-pager li,
+  &.is-background .btn-prev,
+  &.is-background .btn-next {
+    background: transparent;
+    border-radius: 9px;
+    margin: 0 2px;
+  }
+
+  &.is-background .el-pager li:hover:not(.is-active) {
+    background: var(--fb-surface-3);
+    color: var(--fb-text);
+  }
+
+  &.is-background .el-pager li.is-active,
+  .el-pager li.is-active {
+    background: var(--fb-ink);
+    color: #fff;
+  }
+
+  .btn-prev,
+  .btn-next {
+    border-radius: 9px;
+  }
+}
+
+.el-empty__description p {
+  color: var(--fb-muted);
+}
+
+.el-loading-mask {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  border-radius: inherit;
+}
+
+.el-avatar {
+  --el-avatar-bg-color: var(--fb-accent-soft);
+  color: #4338ca;
+  font-weight: 600;
+}
+
+.el-switch {
+  --el-switch-on-color: var(--fb-primary);
+}
+
+.el-tooltip__trigger:focus-visible {
+  outline: none;
+}

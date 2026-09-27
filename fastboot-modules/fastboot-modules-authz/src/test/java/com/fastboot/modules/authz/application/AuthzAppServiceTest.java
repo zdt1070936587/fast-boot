@@ -39,6 +39,18 @@ class AuthzAppServiceTest {
     }
 
     @Test
+    void visibleOrgIdsIncludesOrgScope() {
+        when(relationMapper.listScopeTypes(1L)).thenReturn(List.of("ORG"));
+        assertEquals(List.of(9L), service.visibleOrgIds(1L, 9L));
+    }
+
+    @Test
+    void visibleOrgIdsSelfScopeDoesNotAddOrgIds() {
+        when(relationMapper.listScopeTypes(1L)).thenReturn(List.of("SELF"));
+        assertTrue(service.visibleOrgIds(1L, 9L).isEmpty());
+    }
+
+    @Test
     void visibleOrgIdsMergesCustomOrgs() {
         when(relationMapper.listScopeTypes(1L)).thenReturn(List.of("SELF_ORG", "CUSTOM"));
         when(relationMapper.listCustomOrgIds(1L)).thenReturn(List.of(7L, 8L));

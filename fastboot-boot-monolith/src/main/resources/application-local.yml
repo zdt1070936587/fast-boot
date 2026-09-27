@@ -1,10 +1,11 @@
 spring:
   datasource:
-    username: ${POSTGRES_USER:fastboot}
-    password: ${POSTGRES_PASSWORD:fastboot}
+    username: ${POSTGRES_USER:dafu}
+    password: ${POSTGRES_PASSWORD:123456}
   data:
     redis:
-      password: ${REDIS_PASSWORD:fastboot}
+      # 本机现有 redis 容器 requirepass=qxmof；项目 docker-compose 默认仍是 fastboot
+      password: ${REDIS_PASSWORD:qxmof}
 
 management:
   endpoints:

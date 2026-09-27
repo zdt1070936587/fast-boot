@@ -21,6 +21,10 @@ public abstract class AggregateRoot<ID extends Serializable> implements Serializ
     private OffsetDateTime createdAt;
     /** 最后更新时间 */
     private OffsetDateTime updatedAt;
+    /** 创建人 */
+    private Long createdBy;
+    /** 更新人 */
+    private Long updatedBy;
     /** 待发布的领域事件 */
     private transient List<Object> domainEvents = new ArrayList<>();
 
@@ -54,6 +58,22 @@ public abstract class AggregateRoot<ID extends Serializable> implements Serializ
 
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Long getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     protected void registerEvent(Object event) {

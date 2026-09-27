@@ -38,6 +38,9 @@ public class SysUserEntity implements Serializable {
     /** 所属组织单元 ID */
     private Long orgUnitId;
 
+    /** 租户 ID */
+    private Long tenantId;
+
     /** 乐观锁版本号 */
     @Version
     private Long version;
@@ -96,6 +99,14 @@ public class SysUserEntity implements Serializable {
 
     public void setOrgUnitId(Long orgUnitId) {
         this.orgUnitId = orgUnitId;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public Long getVersion() {

@@ -31,6 +31,10 @@ public enum ErrorCode {
     CONFLICT(409001, 409, "数据冲突"),
     /** 幂等重复请求 */
     IDEMPOTENT_CONFLICT(409002, 409, "重复请求"),
+    /** 请求过于频繁 */
+    TOO_MANY_REQUESTS(429000, 429, "请求过于频繁"),
+    /** 租户不存在或已停用 */
+    TENANT_INVALID(403001, 403, "租户无效或已停用"),
     /** 未预期的系统内部错误 */
     INTERNAL_ERROR(500000, 500, "系统内部错误");
 
@@ -45,6 +49,11 @@ public enum ErrorCode {
         this.code = code;
         this.httpStatus = httpStatus;
         this.message = message;
+    }
+
+    /** i18n 消息键 */
+    public String messageKey() {
+        return "error." + name().toLowerCase();
     }
 
     /** @return 业务错误码 */

@@ -2,6 +2,8 @@ package com.fastboot.modules.authz.application;
 
 import com.fastboot.modules.authz.api.PermissionQueryPort;
 import com.fastboot.modules.authz.infrastructure.mapper.AuthzRelationMapper;
+import com.fastboot.starter.tenant.TenantContext;
+import com.fastboot.starter.tenant.TenantKeyPrefix;
 import java.time.Duration;
 import java.util.List;
 import org.redisson.api.RBucket;
@@ -36,18 +38,18 @@ public class PermissionQueryService implements PermissionQueryPort {
 
     @Override
     public List<String> listByUserId(Long userId) {
-        return cachedList("fb:perm:" + userId, () -> relationMapper.listPermissionCodesByUserId(userId));
+        return cachedList(permKey(userId), () -> relationMapper.listPermissionCodesByUserId(userId));
     }
 
     @Override
     public List<String> listRolesByUserId(Long userId) {
-        return cachedList("fb:role:" + userId, () -> relationMapper.listRoleCodesByUserId(userId));
+        return cachedList(roleKey(userId), () -> relationMapper.listRoleCodesByUserId(userId));
     }
 
     @Override
     public void evict(Long userId) {
-        redissonClient.getBucket("fb:perm:" + userId).delete();
-        redissonClient.getBucket("fb:role:" + userId).delete();
+        redissonClient.getBucket(permKey(userId)).delete();
+        redissonClient.getBucket(roleKey(userId)).delete();
     }
 
     private List<String> cachedList(String key, java.util.function.Supplier<List<String>> loader) {
@@ -71,5 +73,30 @@ public class PermissionQueryService implements PermissionQueryPort {
             log.warn("permission cache write failed key={}", key, ex);
         }
         return fresh;
+    }
+
+    private String permKey(Long userId) {
+        return tenantPrefixed("fb:perm:" + userId);
+    }
+
+    private String roleKey(Long userId) {
+        return tenantPrefixed("fb:role:" + userId);
+    }
+
+    private String tenantPrefixed(String key) {
+        try {
+            return TenantKeyPrefix.of(key);
+        } catch (Throwable ex) {
+            Long tenantId = null;
+            try {
+                tenantId = TenantContext.get();
+            } catch (Throwable ignored) {
+                // ignore
+            }
+            if (tenantId == null) {
+                return key;
+            }
+            return "t:" + tenantId + ":" + key;
+        }
     }
 }

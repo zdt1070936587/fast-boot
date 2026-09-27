@@ -13,6 +13,10 @@ import org.springframework.stereotype.Component;
 /**
  * 登录防护：按 IP 限流与按用户名累计失败锁定。
  *
+ * <p>通用方法级限流请使用 {@code fastboot-starter-protection} 提供的 {@link
+ * com.fastboot.common.ratelimit.RateLimiter} 注解（超限返回 {@link
+ * com.fastboot.common.error.ErrorCode#TOO_MANY_REQUESTS}）。本组件专注登录场景的 IP 与失败计数策略。
+ *
  * @author zhaodt
  * @since 2026-09-19
  */

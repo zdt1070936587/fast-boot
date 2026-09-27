@@ -16,7 +16,7 @@
 docker compose up -d
 ```
 
-- PostgreSQL：`localhost:5432`，库/用户/密码默认 `fastboot`
+- PostgreSQL：`127.0.0.1:15432`，库 `fastboot`，用户/密码默认 `dafu` / `123456`
 - Redis：`localhost:6379`，默认密码 `fastboot`
 
 可选 Nacos：
@@ -30,15 +30,26 @@ docker compose -f docker-compose.yml -f docker-compose.nacos.yml up -d
 ## 构建与测试
 
 ```bash
-mvn verify
+mvn -DskipTests compile   # 默认 reactor（不含 microservice）
+mvn verify                # 含 Testcontainers 集成测试
 ```
 
-需要 Docker 以运行 Testcontainers 集成测试。
+微服务聚合模块需显式启用 profile：
+
+```bash
+mvn -Pcloud -pl fastboot-boot-microservice -am package
+```
 
 引入 Spring Cloud Alibaba BOM（实验性微服务发现）：
 
 ```bash
 mvn -Pwith-cloud-alibaba verify
+```
+
+一键本地数据层（Postgres + Redis，见 `docker-compose.all.yml`）：
+
+```bash
+docker compose -f docker-compose.all.yml up -d
 ```
 
 ## 单体模式（推荐）
@@ -63,6 +74,8 @@ mvn spring-boot:run
 | --- | --- | --- |
 | 登录 | POST | `/api/v1/auth/login` `{"username":"admin","password":"admin"}` |
 | 当前用户 | GET | `/api/v1/auth/info` |
+| 当前菜单 | GET | `/api/v1/auth/menus` |
+| 用户 CRUD | GET/POST/PUT/DELETE | `/api/v1/users` |
 | 权限示例 | GET | `/api/v1/demo/ping`（`sys:demo:read`） |
 | 角色 | GET | `/api/v1/authz/roles` |
 | 组织 | GET | `/api/v1/org` |
@@ -70,7 +83,7 @@ mvn spring-boot:run
 
 Token 请求头：`Authorization: Bearer <tokenValue>`。
 
-HTTP 示例见 `http/api.http`。
+HTTP 示例见 `http/api.http`、`http/system.http`、`http/infra.http`。
 
 ## 微服务模式（experimental）
 
@@ -83,14 +96,26 @@ HTTP 示例见 `http/api.http`。
 | 模块 | 作用 |
 | --- | --- |
 | `fastboot-dependencies` | 唯一第三方/内部版本 BOM |
-| `fastboot-common` | `R`、错误码、锁/审计/幂等注解 |
+| `fastboot-common` | `R`、错误码、锁/审计/幂等/限流注解 |
 | `fastboot-ddd/*` | 内核：聚合基类、MyBatis、Web 异常与 TraceId |
-| `fastboot-modules-authz-api` | 授权契约端口（`PermissionQueryPort` / `DataScopePort`） |
-| `fastboot-modules-user` | 认证与用户 |
-| `fastboot-modules-authz` | 角色/权限/菜单与权限查询实现 |
-| `fastboot-modules-org` | 组织树与数据范围过滤 |
+| `fastboot-starters/*` | 可组合自动配置：web、security、mybatis、redis、protection、tenant、data-permission、excel、websocket、test、oauth2、justauth、captcha、passkey |
+| `fastboot-modules-authz-api` | 授权契约（权限/数据范围/`MenuQueryPort`） |
+| `fastboot-modules-user-api` | 用户查询契约（`UserQueryPort`） |
+| `fastboot-modules-system-api` | 系统契约（租户/字典/配置/审计端口） |
+| `fastboot-modules-infra-api` | 基础设施契约（文件/通知/任务端口） |
+| `fastboot-modules-bpm-api` / `fastboot-modules-bpm` | 工作流契约与占位实现（后续接入 Flowable 等） |
+| `fastboot-modules-ai-api` / `fastboot-modules-ai` | AI 契约与占位实现 |
+| `fastboot-modules-user` | 认证、`/auth/menus`、用户 CRUD |
+| `fastboot-modules-authz` | 角色/权限/菜单管理与查询实现 |
+| `fastboot-modules-org` | 组织树；`OrgAppService#list` 带 `@DataPermission` |
+| `fastboot-modules-system` | 租户、字典、配置、审计、在线用户 |
+| `fastboot-modules-infra` | 文件、任务、通知、访问日志、站内信 |
+| `fastboot-cloud` | 单体/微服务切换时的 Feign 远程端口适配 |
 | `fastboot-boot-monolith` | 默认启动器 |
-| `fastboot-boot-microservice/*` | 实验性拆分 |
+| `fastboot-boot-microservice/*` | 实验性拆分（`-Pcloud`） |
+| `tools/fastboot-codegen` | 新模块脚手架（`-Ptools`） |
+| `fastboot-ui` | Vue 3 管理端（Vite + UnoCSS） |
+| `deploy/` | K8s 单体部署与 Prometheus/Grafana 参考 |
 
 分层约定见 `docs/architecture.md`、`docs/adr` 与 `docs/CONTRIBUTING.md`。新模块模板见 `docs/codegen.md`。
 

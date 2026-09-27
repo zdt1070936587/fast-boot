@@ -1,5 +1,6 @@
 package com.fastboot.modules.authz.infrastructure.mapper;
 
+import com.fastboot.modules.authz.infrastructure.persistence.entity.SysMenuEntity;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -34,6 +35,17 @@ public interface AuthzRelationMapper {
             where ur.user_id = #{userId}
             """)
     List<String> listRoleCodesByUserId(@Param("userId") Long userId);
+
+    @Select(
+            """
+            select distinct m.id, m.parent_id, m.name, m.path, m.component, m.perm_code
+            from sys_menu m
+            inner join rel_role_menu rm on m.id = rm.menu_id
+            inner join rel_user_role ur on rm.role_id = ur.role_id
+            where ur.user_id = #{userId}
+            order by m.id
+            """)
+    List<SysMenuEntity> listMenusByUserId(@Param("userId") Long userId);
 
     @Select("select user_id from rel_user_role where role_id = #{roleId}")
     List<Long> listUserIdsByRoleId(@Param("roleId") Long roleId);

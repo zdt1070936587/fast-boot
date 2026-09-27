@@ -23,6 +23,13 @@
         <postgresql.version>42.7.5</postgresql.version>
         <archunit.version>1.3.0</archunit.version>
         <testcontainers.version>1.20.4</testcontainers.version>
+        <fastexcel.version>1.2.0</fastexcel.version>
+        <db-scheduler.version>15.1.0</db-scheduler.version>
+        <aws.sdk.version>2.29.45</aws.sdk.version>
+        <justauth.version>1.16.7</justauth.version>
+        <webauthn4j.version>0.28.3.RELEASE</webauthn4j.version>
+        <picocli.version>4.7.6</picocli.version>
+        <freemarker.version>2.3.34</freemarker.version>
     </properties>
 
     <dependencyManagement>
@@ -116,11 +123,6 @@
             </dependency>
             <dependency>
                 <groupId>com.fastboot</groupId>
-                <artifactId>fastboot-application</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fastboot</groupId>
                 <artifactId>fastboot-infrastructure</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -151,7 +153,162 @@
             </dependency>
             <dependency>
                 <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-user-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-system-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-system</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-infra-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-infra</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-mybatis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-redis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-oauth2</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-justauth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-captcha</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-passkey</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-bpm-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-bpm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-ai-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-modules-ai</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-protection</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-tenant</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-data-permission</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-excel</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-starter-websocket</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
                 <artifactId>fastboot-cloud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.idev.excel</groupId>
+                <artifactId>fastexcel</artifactId>
+                <version>${fastexcel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.kagkarlsson</groupId>
+                <artifactId>db-scheduler-spring-boot-starter</artifactId>
+                <version>${db-scheduler.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${aws.sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>me.zhyd.oauth</groupId>
+                <artifactId>JustAuth</artifactId>
+                <version>${justauth.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.webauthn4j</groupId>
+                <artifactId>webauthn4j-core</artifactId>
+                <version>${webauthn4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>info.picocli</groupId>
+                <artifactId>picocli</artifactId>
+                <version>${picocli.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fastboot</groupId>
+                <artifactId>fastboot-codegen</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

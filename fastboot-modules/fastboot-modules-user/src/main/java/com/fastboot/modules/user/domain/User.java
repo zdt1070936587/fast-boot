@@ -22,6 +22,16 @@ public class User extends AggregateRoot<Long> {
     /** 所属组织单元 ID */
     private Long orgUnitId;
 
+    public static User create(String username, String displayName, String passwordHash, Long orgUnitId) {
+        User user = new User();
+        user.username = username;
+        user.displayName = displayName;
+        user.passwordHash = passwordHash;
+        user.enabled = true;
+        user.orgUnitId = orgUnitId;
+        return user;
+    }
+
     public static User restore(
             Long id,
             String username,
@@ -86,5 +96,21 @@ public class User extends AggregateRoot<Long> {
 
     public void assignOrg(Long orgUnitId) {
         this.orgUnitId = orgUnitId;
+    }
+
+    public void updateProfile(String displayName, Boolean enabled, Long orgUnitId) {
+        if (displayName != null && !displayName.isBlank()) {
+            this.displayName = displayName;
+        }
+        if (enabled != null) {
+            this.enabled = enabled;
+        }
+        if (orgUnitId != null) {
+            this.orgUnitId = orgUnitId;
+        }
+    }
+
+    public void resetPassword(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }

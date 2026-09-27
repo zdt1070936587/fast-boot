@@ -6,6 +6,8 @@ import com.fastboot.modules.user.domain.User;
 import com.fastboot.modules.user.domain.UserRepository;
 import com.fastboot.modules.user.infrastructure.mapper.SysUserMapper;
 import com.fastboot.modules.user.infrastructure.persistence.entity.SysUserEntity;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
@@ -33,6 +35,16 @@ public class MybatisUserRepository implements UserRepository {
     @Override
     public Optional<User> findById(Long id) {
         return Optional.ofNullable(sysUserMapper.selectById(id)).map(this::toDomain);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return sysUserMapper.selectList(Wrappers.emptyWrapper()).stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        sysUserMapper.deleteById(id);
     }
 
     @Override

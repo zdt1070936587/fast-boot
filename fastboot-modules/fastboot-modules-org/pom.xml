@@ -21,10 +21,6 @@
         </dependency>
         <dependency>
             <groupId>com.fastboot</groupId>
-            <artifactId>fastboot-application</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fastboot</groupId>
             <artifactId>fastboot-infrastructure</artifactId>
         </dependency>
         <dependency>
@@ -34,6 +30,11 @@
         <dependency>
             <groupId>com.fastboot</groupId>
             <artifactId>fastboot-modules-authz-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fastboot</groupId>
+            <artifactId>fastboot-starter-data-permission</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

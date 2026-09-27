@@ -1,0 +1,3 @@
+aggregate: Sample
+table: order_sample
+description: 示例订单聚合（codegen 演示）

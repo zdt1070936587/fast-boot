@@ -1,0 +1,9 @@
+# fastboot-codegen 示例配置（可复制后按需修改）
+module:
+  name: demo
+  package: demo
+aggregate:
+  name: Demo
+  table: sys_demo
+output:
+  root: .

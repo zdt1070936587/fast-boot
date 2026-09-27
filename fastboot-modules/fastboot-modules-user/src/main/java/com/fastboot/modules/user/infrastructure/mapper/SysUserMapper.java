@@ -3,6 +3,8 @@ package com.fastboot.modules.user.infrastructure.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastboot.modules.user.infrastructure.persistence.entity.SysUserEntity;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,5 +20,12 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
     default Optional<SysUserEntity> findByUsername(String username) {
         return Optional.ofNullable(
                 selectOne(Wrappers.<SysUserEntity>lambdaQuery().eq(SysUserEntity::getUsername, username)));
+    }
+
+    default List<SysUserEntity> findByIds(Collection<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return selectList(Wrappers.<SysUserEntity>lambdaQuery().in(SysUserEntity::getId, ids));
     }
 }

@@ -66,8 +66,12 @@ public class AuthzAppService implements DataScopePort {
             return List.of();
         }
         Set<Long> ids = new HashSet<>();
-        if (types.contains("SELF_ORG") && selfOrgId != null) {
-            ids.add(selfOrgId);
+        if (selfOrgId != null) {
+            if (types.contains("ORG")
+                    || types.contains("SELF_ORG")
+                    || types.contains("ORG_AND_CHILDREN")) {
+                ids.add(selfOrgId);
+            }
         }
         if (types.contains("CUSTOM")) {
             ids.addAll(relationMapper.listCustomOrgIds(userId));

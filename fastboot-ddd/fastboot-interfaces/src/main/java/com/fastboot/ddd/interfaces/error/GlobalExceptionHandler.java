@@ -7,8 +7,11 @@ import com.fastboot.common.error.BizException;
 import com.fastboot.common.error.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +22,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 /**
- * 全局 REST 异常处理，将各类异常统一转换为 {@link R} 响应。
+ * 全局 REST 异常处理，将各类异常统一转换为 {@link R} 响应（支持 i18n）。
  *
  * @author zhaodt
  * @since 2026-09-19
@@ -27,10 +30,14 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /** 异常处理日志 */
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    /** 处理业务异常 */
+    private final MessageSource messageSource;
+
+    public GlobalExceptionHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
     @ExceptionHandler(BizException.class)
     public ResponseEntity<R<Void>> handleBiz(BizException ex) {
         log.warn("biz error code={} msg={}", ex.getCode(), ex.getMessage());
@@ -38,38 +45,35 @@ public class GlobalExceptionHandler {
         if (status == null) {
             status = HttpStatus.BAD_REQUEST;
         }
-        return ResponseEntity.status(status).body(R.fail(ex.getCode(), ex.getMessage()));
+        return ResponseEntity.status(status).body(R.fail(ex.getCode(), resolveMessage(ex)));
     }
 
-    /** 处理未登录 */
     @ExceptionHandler(NotLoginException.class)
     public ResponseEntity<R<Void>> handleNotLogin(NotLoginException ex) {
         log.warn("not login: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(R.fail(ErrorCode.UNAUTHORIZED.code(), ErrorCode.UNAUTHORIZED.message()));
+                .body(R.fail(ErrorCode.UNAUTHORIZED.code(), msg(ErrorCode.UNAUTHORIZED)));
     }
 
-    /** 处理无权限 */
     @ExceptionHandler(NotPermissionException.class)
     public ResponseEntity<R<Void>> handleNotPermission(NotPermissionException ex) {
         log.warn("forbidden: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(R.fail(ErrorCode.FORBIDDEN.code(), ErrorCode.FORBIDDEN.message()));
+                .body(R.fail(ErrorCode.FORBIDDEN.code(), msg(ErrorCode.FORBIDDEN)));
     }
 
-    /** 处理 Bean Validation 参数校验失败 */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<R<Void>> handleValid(MethodArgumentNotValidException ex) {
-        String msg =
+        String fallback = msg(ErrorCode.VALIDATION_FAILED);
+        String detail =
                 ex.getBindingResult().getFieldErrors().stream()
                         .findFirst()
                         .map(err -> err.getField() + " " + err.getDefaultMessage())
-                        .orElse(ErrorCode.VALIDATION_FAILED.message());
-        log.warn("validation failed: {}", msg);
-        return ResponseEntity.badRequest().body(R.fail(ErrorCode.VALIDATION_FAILED.code(), msg));
+                        .orElse(fallback);
+        log.warn("validation failed: {}", detail);
+        return ResponseEntity.badRequest().body(R.fail(ErrorCode.VALIDATION_FAILED.code(), detail));
     }
 
-    /** 处理约束校验异常 */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<R<Void>> handleConstraint(ConstraintViolationException ex) {
         log.warn("constraint: {}", ex.getMessage());
@@ -77,7 +81,6 @@ public class GlobalExceptionHandler {
                 .body(R.fail(ErrorCode.VALIDATION_FAILED.code(), ex.getMessage()));
     }
 
-    /** 处理不可读的请求体 */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<R<Void>> handleUnreadable(HttpMessageNotReadableException ex) {
         log.warn("bad request body: {}", ex.getMessage());
@@ -85,27 +88,52 @@ public class GlobalExceptionHandler {
                 .body(R.fail(ErrorCode.VALIDATION_FAILED.code(), "请求体无法解析"));
     }
 
-    /** 处理数据库完整性约束冲突 */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<R<Void>> handleDataIntegrity(DataIntegrityViolationException ex) {
         log.warn("data integrity: {}", ex.getMostSpecificCause().getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(R.fail(ErrorCode.CONFLICT.code(), ErrorCode.CONFLICT.message()));
+                .body(R.fail(ErrorCode.CONFLICT.code(), msg(ErrorCode.CONFLICT)));
     }
 
-    /** 处理 404 无路由 */
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<R<Void>> handle404(NoHandlerFoundException ex) {
         log.warn("not found: {}", ex.getRequestURL());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(R.fail(ErrorCode.NOT_FOUND.code(), ErrorCode.NOT_FOUND.message()));
+                .body(R.fail(ErrorCode.NOT_FOUND.code(), msg(ErrorCode.NOT_FOUND)));
     }
 
-    /** 兜底处理未捕获异常 */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<R<Void>> handleAny(Exception ex, HttpServletRequest request) {
         log.error("unhandled {} {}", request.getMethod(), request.getRequestURI(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(R.fail(ErrorCode.INTERNAL_ERROR.code(), ErrorCode.INTERNAL_ERROR.message()));
+                .body(R.fail(ErrorCode.INTERNAL_ERROR.code(), msg(ErrorCode.INTERNAL_ERROR)));
+    }
+
+    private String resolveMessage(BizException ex) {
+        if (ex.getMessage() != null
+                && !ex.getMessage().isBlank()
+                && !ex.getMessage().equals(defaultEnumMessage(ex.getCode()))) {
+            return ex.getMessage();
+        }
+        for (ErrorCode code : ErrorCode.values()) {
+            if (code.code() == ex.getCode()) {
+                return msg(code);
+            }
+        }
+        return ex.getMessage();
+    }
+
+    private String defaultEnumMessage(int code) {
+        for (ErrorCode ec : ErrorCode.values()) {
+            if (ec.code() == code) {
+                return ec.message();
+            }
+        }
+        return null;
+    }
+
+    private String msg(ErrorCode code) {
+        Locale locale = LocaleContextHolder.getLocale();
+        return messageSource.getMessage(code.messageKey(), null, code.message(), locale);
     }
 }

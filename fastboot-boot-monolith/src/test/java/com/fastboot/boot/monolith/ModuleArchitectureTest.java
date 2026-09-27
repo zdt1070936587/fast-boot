@@ -33,12 +33,12 @@ class ModuleArchitectureTest {
                     .resideInAPackage("..infrastructure.mapper..");
 
     @ArchTest
-    static final ArchRule modulesShouldOnlyCoupleViaAuthzApi =
+    static final ArchRule modulesShouldOnlyCoupleViaModuleApi =
             slices()
                     .matching("com.fastboot.modules.(*)..")
                     .should()
                     .notDependOnEachOther()
-                    .ignoreDependency(alwaysTrue(), resideInAPackage("..modules.authz.api.."));
+                    .ignoreDependency(alwaysTrue(), resideInAPackage("..modules..api.."));
 
     @ArchTest
     static final ArchRule apiPackagesShouldStayPure =

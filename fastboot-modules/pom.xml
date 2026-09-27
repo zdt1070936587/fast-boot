@@ -17,7 +17,16 @@
     <modules>
         <module>fastboot-modules-authz-api</module>
         <module>fastboot-modules-authz</module>
+        <module>fastboot-modules-user-api</module>
         <module>fastboot-modules-user</module>
         <module>fastboot-modules-org</module>
+        <module>fastboot-modules-system-api</module>
+        <module>fastboot-modules-system</module>
+        <module>fastboot-modules-infra-api</module>
+        <module>fastboot-modules-infra</module>
+        <module>fastboot-modules-bpm-api</module>
+        <module>fastboot-modules-bpm</module>
+        <module>fastboot-modules-ai-api</module>
+        <module>fastboot-modules-ai</module>
     </modules>
 </project>

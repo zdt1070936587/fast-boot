@@ -14,9 +14,9 @@ spring:
     virtual:
       enabled: ${VIRTUAL_THREADS:false}
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:fastboot}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://${POSTGRES_HOST:127.0.0.1}:${POSTGRES_PORT:15432}/${POSTGRES_DB:fastboot}
+    username: ${POSTGRES_USER:dafu}
+    password: ${POSTGRES_PASSWORD:123456}
     hikari:
       maximum-pool-size: ${HIKARI_MAX_POOL:10}
       minimum-idle: 2
@@ -41,10 +41,16 @@ sa-token:
 management:
   server:
     port: ${MANAGEMENT_PORT:8081}
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLE:0.1}
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_ENDPOINT:http://localhost:9411/api/v2/spans}
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,prometheus
   endpoint:
     health:
       probes:
@@ -68,3 +74,17 @@ fastboot:
     permit-internal: false
   admin:
     bootstrap: false
+  oauth2:
+    enabled: false
+  justauth:
+    enabled: false
+  captcha:
+    enabled: false
+  passkey:
+    enabled: false
+    rp-id: localhost
+    rp-name: FastBoot
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

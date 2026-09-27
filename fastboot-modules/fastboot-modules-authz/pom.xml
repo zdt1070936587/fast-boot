@@ -25,15 +25,15 @@
         </dependency>
         <dependency>
             <groupId>com.fastboot</groupId>
-            <artifactId>fastboot-application</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fastboot</groupId>
             <artifactId>fastboot-infrastructure</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fastboot</groupId>
             <artifactId>fastboot-interfaces</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fastboot</groupId>
+            <artifactId>fastboot-starter-tenant</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

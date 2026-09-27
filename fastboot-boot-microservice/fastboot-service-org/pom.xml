@@ -25,7 +25,15 @@
         </dependency>
         <dependency>
             <groupId>com.fastboot</groupId>
-            <artifactId>fastboot-modules-authz</artifactId>
+            <artifactId>fastboot-modules-authz-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

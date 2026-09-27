@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         scanBasePackages = {
             "com.fastboot.service.org",
             "com.fastboot.modules.org",
-            "com.fastboot.modules.authz",
             "com.fastboot.ddd.infrastructure",
             "com.fastboot.ddd.interfaces",
             "com.fastboot.cloud"

@@ -1,0 +1,29 @@
+### Login (set token manually after response)
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{"username":"admin","password":"admin"}
+
+### Tenants
+GET http://localhost:8080/api/v1/system/tenants
+Authorization: Bearer {{token}}
+
+### Dict types
+GET http://localhost:8080/api/v1/system/dicts/types
+Authorization: Bearer {{token}}
+
+### Configs
+GET http://localhost:8080/api/v1/system/configs
+Authorization: Bearer {{token}}
+
+### Online users
+GET http://localhost:8080/api/v1/system/online-users
+Authorization: Bearer {{token}}
+
+### Login logs
+GET http://localhost:8080/api/v1/system/login-logs
+Authorization: Bearer {{token}}
+
+### Operation logs
+GET http://localhost:8080/api/v1/system/operation-logs
+Authorization: Bearer {{token}}

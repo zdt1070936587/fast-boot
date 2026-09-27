@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastboot-monolith
+  labels:
+    app: fastboot-monolith
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastboot-monolith
+  template:
+    metadata:
+      labels:
+        app: fastboot-monolith
+    spec:
+      containers:
+        - name: app
+          image: fastboot/monolith:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/fastboot
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: fastboot-db
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fastboot-db
+                  key: password
+            - name: SPRING_DATA_REDIS_HOST
+              value: redis
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastboot-monolith
+spec:
+  selector:
+    app: fastboot-monolith
+  ports:
+    - port: 80
+      targetPort: 8080
